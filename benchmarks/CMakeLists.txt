@@ -12,6 +12,28 @@
 # the License.
 # =============================================================================
 
+# MIT License
+#
+# Modifications Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 # Build options
 option(DISABLE_DEPRECATION_WARNING "Disable warnings generated from deprecated declarations." OFF)
 option(PER_THREAD_DEFAULT_STREAM "Build with per-thread default stream" OFF)
@@ -25,6 +47,7 @@ endif()
 # This function takes in a benchmark name and benchmark source and handles setting all of the
 # associated properties and linking to build the benchmark
 function(ConfigureBench BENCH_NAME)
+  set_source_files_properties(${ARGN} PROPERTIES LANGUAGE HIP)
   add_executable(${BENCH_NAME} ${ARGN}
                                "${CMAKE_CURRENT_SOURCE_DIR}/synchronization/synchronization.cpp")
   target_include_directories(${BENCH_NAME} PRIVATE "$<BUILD_INTERFACE:${RMM_SOURCE_DIR}>")
@@ -32,14 +55,14 @@ function(ConfigureBench BENCH_NAME)
     ${BENCH_NAME}
     PROPERTIES POSITION_INDEPENDENT_CODE ON
                RUNTIME_OUTPUT_DIRECTORY "$<BUILD_INTERFACE:${RMM_BINARY_DIR}/gbenchmarks>"
-               CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}"
+               HIP_ARCHITECTURES "${CMAKE_HIP_ARCHITECTURES}"
                INSTALL_RPATH "\$ORIGIN/../../../lib")
   target_link_libraries(${BENCH_NAME} PRIVATE benchmark::benchmark pthread rmm)
   target_compile_definitions(${BENCH_NAME}
                              PUBLIC "RMM_LOG_ACTIVE_LEVEL=RMM_LOG_LEVEL_${RMM_LOGGING_LEVEL}")
 
   if(PER_THREAD_DEFAULT_STREAM)
-    target_compile_definitions(${BENCH_NAME} PUBLIC CUDA_API_PER_THREAD_DEFAULT_STREAM)
+    target_compile_definitions(${BENCH_NAME} PUBLIC HIP_API_PER_THREAD_DEFAULT_STREAM)
   endif()
 
   target_compile_options(${BENCH_NAME} PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang>:-Wall -Werror
@@ -48,8 +71,8 @@ function(ConfigureBench BENCH_NAME)
   target_link_libraries(${BENCH_NAME} PRIVATE rmm_bench_logger)
 
   if(DISABLE_DEPRECATION_WARNING)
-    target_compile_options(
-      ${BENCH_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-Wno-deprecated-declarations>)
+    # target_compile_options(
+    #   ${BENCH_NAME} PUBLIC $<$<COMPILE_LANGUAGE:HIP>:-Xcompiler=-Wno-deprecated-declarations>)
     target_compile_options(${BENCH_NAME}
                            PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>)
   endif()

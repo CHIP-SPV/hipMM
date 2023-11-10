@@ -12,6 +12,28 @@
 # the License.
 # =============================================================================
 
+# MIT License
+#
+# Modifications Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 # Build options
 option(DISABLE_DEPRECATION_WARNING "Disable warnings generated from deprecated declarations." OFF)
 option(CODE_COVERAGE "Enable generating code coverage with gcov." OFF)
@@ -25,6 +47,7 @@ rapids_cmake_support_conda_env(conda_env)
 # This function takes in a test name and test source and handles setting all of the associated
 # properties and linking to build the test
 function(ConfigureTestInternal TEST_NAME)
+  set_source_files_properties(${ARGN} PROPERTIES LANGUAGE HIP)
   add_executable(${TEST_NAME} ${ARGN})
   target_include_directories(${TEST_NAME} PRIVATE "$<BUILD_INTERFACE:${RMM_SOURCE_DIR}>")
   target_link_libraries(
@@ -34,7 +57,7 @@ function(ConfigureTestInternal TEST_NAME)
     ${TEST_NAME}
     PROPERTIES POSITION_INDEPENDENT_CODE ON
                RUNTIME_OUTPUT_DIRECTORY "$<BUILD_INTERFACE:${RMM_BINARY_DIR}/gtests>"
-               CUDA_ARCHITECTURES "${CMAKE_CUDA_ARCHITECTURES}"
+               HIP_ARCHITECTURES  "${CMAKE_HIP_ARCHITECTURES}"
                INSTALL_RPATH "\$ORIGIN/../../../lib"
                CXX_STANDARD 17
                CXX_STANDARD_REQUIRED ON
@@ -47,8 +70,8 @@ function(ConfigureTestInternal TEST_NAME)
   target_link_libraries(${TEST_NAME} PRIVATE rmm_test_logger)
 
   if(DISABLE_DEPRECATION_WARNING)
-    target_compile_options(
-      ${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-Wno-deprecated-declarations>)
+    # target_compile_options(
+    #   ${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-Wno-deprecated-declarations>)
     target_compile_options(${TEST_NAME}
                            PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>)
   endif()
@@ -58,13 +81,13 @@ function(ConfigureTestInternal TEST_NAME)
 
       set(KEEP_DIR ${CMAKE_CURRENT_BINARY_DIR}/tmp)
       make_directory(${KEEP_DIR})
-      target_compile_options(${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:--keep
-                                                 --keep-dir=${KEEP_DIR}>)
-      target_compile_options(
-        ${TEST_NAME}
-        PUBLIC
-          $<$<COMPILE_LANGUAGE:CUDA>:-O0
-          -Xcompiler=--coverage,-fprofile-abs-path,-fkeep-inline-functions,-fno-elide-constructors>)
+      # target_compile_options(${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:--keep
+      #                                            --keep-dir=${KEEP_DIR}>)
+      # target_compile_options(
+      #   ${TEST_NAME}
+      #   PUBLIC
+      #     $<$<COMPILE_LANGUAGE:CUDA>:-O0
+      #     -Xcompiler=--coverage,-fprofile-abs-path,-fkeep-inline-functions,-fno-elide-constructors>)
       target_compile_options(
         ${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-O0 --coverage -fprofile-abs-path
                             -fkeep-inline-functions -fno-elide-constructors>)
