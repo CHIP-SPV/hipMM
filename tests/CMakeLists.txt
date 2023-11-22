@@ -79,19 +79,19 @@ function(ConfigureTestInternal TEST_NAME)
   endif()
 
   if(CODE_COVERAGE)
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" or CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
       set(KEEP_DIR ${CMAKE_CURRENT_BINARY_DIR}/tmp)
       make_directory(${KEEP_DIR})
-      # target_compile_options(${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:--keep
-      #                                            --keep-dir=${KEEP_DIR}>)
-      # target_compile_options(
-      #   ${TEST_NAME}
-      #   PUBLIC
-      #     $<$<COMPILE_LANGUAGE:CUDA>:-O0
-      #     -Xcompiler=--coverage,-fprofile-abs-path,-fkeep-inline-functions,-fno-elide-constructors>)
+      target_compile_options(${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:--keep
+                                                  --keep-dir=${KEEP_DIR}>)
       target_compile_options(
-        ${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-O0 --coverage -fprofile-abs-path
+         ${TEST_NAME}
+         PUBLIC
+         $<$<COMPILE_LANGUAGE:CUDA>:-O0
+           -Xcompiler=--coverage,-fprofile-abs-path,-fkeep-inline-functions,-fno-elide-constructors>)
+      target_compile_options(
+        ${TEST_NAME} PUBLIC $<$<COMPILE_LANGUAGE:HIP,CXX>:-O0 --coverage -fprofile-abs-path
                             -fkeep-inline-functions -fno-elide-constructors>)
       target_link_options(${TEST_NAME} PRIVATE --coverage)
       target_link_libraries(${TEST_NAME} PRIVATE gcov)
@@ -126,6 +126,7 @@ function(ConfigureTest TEST_NAME)
     set(_RMM_TEST_PERCENT 100)
   endif()
 
+  #: TODO(HIP/AMD): rebase assess
   if(_RMM_TEST_CUDART STREQUAL SHARED)
     set(cudart_link_libs $<COMPILE_ONLY:rmm> CUDA::cudart)
   elseif(_RMM_TEST_CUDART STREQUAL STATIC)
@@ -141,7 +142,7 @@ function(ConfigureTest TEST_NAME)
   # Test with per-thread default stream.
   string(REGEX REPLACE "_TEST$" "_PTDS_TEST" PTDS_TEST_NAME "${TEST_NAME}")
   ConfigureTestInternal("${PTDS_TEST_NAME}" ${_RMM_TEST_UNPARSED_ARGUMENTS})
-  target_compile_definitions("${PTDS_TEST_NAME}" PUBLIC CUDA_API_PER_THREAD_DEFAULT_STREAM)
+  target_compile_definitions("${PTDS_TEST_NAME}" PUBLIC CUDA_API_PER_THREAD_DEFAULT_STREAM __HIP_API_PER_THREAD_DEFAULT_STREAM__) #: HIP_API_PER_THREAD_DEFAULT_STREAM is deprecated
   target_link_libraries(${PTDS_TEST_NAME} PRIVATE ${cudart_link_libs})
 
   foreach(name ${TEST_NAME} ${PTDS_TEST_NAME} ${NS_TEST_NAME})
