@@ -34,24 +34,29 @@ using cudaStream_t                = hipStream_t;
 using cudaMemPoolAttr             = hipMemPoolAttr;
 using cudaMemPoolProps            = hipMemPoolProps;
 using cudaMemAllocationHandleType = hipMemAllocationHandleType;
+using cudaPointerAttributes = hipPointerAttribute_t;
 // macros, enum constant definitions
 constexpr cudaStream_t cudaStreamLegacy = nullptr;
 #define cudaStreamPerThread                       hipStreamPerThread
 #define cudaMemcpyDefault                         hipMemcpyDefault
 #define cudaMemPoolAttrReleaseThreshold           hipMemPoolAttrReleaseThreshold
 #define cudaDevAttrMemoryPoolSupportedHandleTypes hipDevAttrMemoryPoolSupportedHandleTypes
-#define cudaDevAttrMemoryPoolsSupported           hipDeviceAttributeMemoryPoolsSupported
-#define cudaErrorInvalidValue                     hipErrorInvalidValue
-#define cudaErrorMemoryAllocation                 hipErrorMemoryAllocation
-#define cudaSuccess                               hipSuccess
-#define cudaMemAllocationTypePinned               hipMemAllocationTypePinned
-#define cudaMemPoolAttrReleaseThreshold           hipMemPoolAttrReleaseThreshold
-#define cudaMemHandleTypeNone                     hipMemHandleTypeNone
-#define cudaMemLocationTypeDevice                 hipMemLocationTypeDevice
-#define cudaMemPoolReuseAllowOpportunistic        hipMemPoolReuseAllowOpportunistic
-#define cudaEventDisableTiming                    hipEventDisableTiming
-// function references
-#define cudaDeviceGetAttribute      hipDeviceGetAttribute
+#define cudaDevAttrMemoryPoolsSupported hipDeviceAttributeMemoryPoolsSupported
+#define cudaDevAttrL2CacheSize hipDeviceAttributeL2CacheSize
+#define cudaErrorInvalidValue hipErrorInvalidValue
+#define cudaErrorMemoryAllocation hipErrorMemoryAllocation
+#define cudaSuccess hipSuccess
+#define cudaMemAllocationTypePinned hipMemAllocationTypePinned
+#define cudaMemPoolAttrReleaseThreshold hipMemPoolAttrReleaseThreshold
+#define cudaMemHandleTypeNone hipMemHandleTypeNone
+#define cudaMemLocationTypeDevice hipMemLocationTypeDevice
+#define cudaMemPoolReuseAllowOpportunistic hipMemPoolReuseAllowOpportunistic
+#define cudaEventDisableTiming hipEventDisableTiming
+#define cudaMemoryTypeDevice hipMemoryTypeDevice
+#define cudaMemoryTypeHost hipMemoryTypeHost
+#define cudaMemoryTypeManaged hipMemoryTypeManaged
+// functions
+#define cudaDeviceGetAttribute hipDeviceGetAttribute
 #define cudaDeviceGetDefaultMemPool hipDeviceGetDefaultMemPool
 #define cudaDeviceSynchronize       hipDeviceSynchronize
 
@@ -92,4 +97,9 @@ constexpr cudaStream_t cudaStreamLegacy = nullptr;
 #define cudaStreamCreate      hipStreamCreate
 #define cudaStreamDestroy     hipStreamDestroy
 #define cudaStreamSynchronize hipStreamSynchronize
-#define cudaStreamWaitEvent   hipStreamWaitEvent
+
+#define cudaStreamWaitEvent(a,b,c) hipStreamWaitEvent(a,b,c)
+#define cudaEventCreate hipEventCreate
+#define cudaPointerGetAttributes hipPointerGetAttributes
+#define cudaEventElapsedTime hipEventElapsedTime
+#define cudaStreamQuery hipStreamQuery
