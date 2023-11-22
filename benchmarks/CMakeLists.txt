@@ -47,7 +47,8 @@ endif()
 # This function takes in a benchmark name and benchmark source and handles setting all of the
 # associated properties and linking to build the benchmark
 function(ConfigureBench BENCH_NAME)
-  set_source_files_properties(${ARGN} PROPERTIES LANGUAGE HIP)
+  set_source_files_properties(${ARGN}
+                              "${CMAKE_CURRENT_SOURCE_DIR}/synchronization/synchronization.cpp" PROPERTIES LANGUAGE HIP)
   add_executable(${BENCH_NAME} ${ARGN}
                                "${CMAKE_CURRENT_SOURCE_DIR}/synchronization/synchronization.cpp")
   target_include_directories(${BENCH_NAME} PRIVATE "$<BUILD_INTERFACE:${RMM_SOURCE_DIR}>")
@@ -62,7 +63,7 @@ function(ConfigureBench BENCH_NAME)
                              PUBLIC "RMM_LOG_ACTIVE_LEVEL=RMM_LOG_LEVEL_${RMM_LOGGING_LEVEL}")
 
   if(PER_THREAD_DEFAULT_STREAM)
-    target_compile_definitions(${BENCH_NAME} PUBLIC HIP_API_PER_THREAD_DEFAULT_STREAM)
+    target_compile_definitions(${BENCH_NAME} PUBLIC CUDA_API_PER_THREAD_DEFAULT_STREAM __HIP_API_PER_THREAD_DEFAULT_STREAM__)
   endif()
 
   target_compile_options(${BENCH_NAME} PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang>:-Wall -Werror
@@ -71,10 +72,8 @@ function(ConfigureBench BENCH_NAME)
   target_link_libraries(${BENCH_NAME} PRIVATE rmm_bench_logger)
 
   if(DISABLE_DEPRECATION_WARNING)
-    # target_compile_options(
-    #   ${BENCH_NAME} PUBLIC $<$<COMPILE_LANGUAGE:HIP>:-Xcompiler=-Wno-deprecated-declarations>)
     target_compile_options(${BENCH_NAME}
-                           PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>)
+                           PUBLIC $<$<COMPILE_LANGUAGE:HIP,CXX>:-Wno-deprecated-declarations>)
   endif()
 
   install(
