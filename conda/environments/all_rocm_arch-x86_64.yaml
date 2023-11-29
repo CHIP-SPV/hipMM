@@ -28,19 +28,19 @@ channels:
 - conda-forge
 dependencies:
 - breathe
-#- c-compiler
+#- c-compiler #: linker issues if uses other rt libs than hipcc
 - clang-tools==16.0.6
 #- clang==16.0.6
 - cmake>=3.26.4
 # - cuda-nvcc #: TODO: hipcc as its own conda package?
-# - cuda-python>=11.7.1,<12.0a0 #: TODO: hipcc as its own conda package?
+# - cuda-python>=11.7.1,<12.0a0 #: TODO: hip-python as its own conda package?
 # - cuda-version=11.8 #: TODO: ROCm HIP SDK as its own conda package?
 # - cudatoolkit #: TODO: ROCm HIP SDK as its own conda package?
-#- cxx-compiler
+#- cxx-compiler #: linker issues if uses other rt libs than hipcc
 - cython>=3.0.0
 - doxygen=1.9.1
 - fmt>=9.1.0,<10
-#- gcc_linux-64=11.*
+#- gcc_linux-64=11.* #: linker issues if uses other rt libs than hipcc
 - gcovr>=5.0
 - graphviz
 - identify>=2.5.20
@@ -48,7 +48,7 @@ dependencies:
 - make
 - nbsphinx
 - ninja
-# - numba>=0.57 # :TODO ROCm version of Numba as its own conda package?
+- numba>=0.57 # :TODO ROCm version of Numba as its own conda package?
 - numpy>=1.21
 - numpydoc
 # - nvcc_linux-64=11.8 #: TODO: ROCm HIP SDK as its own conda package?
