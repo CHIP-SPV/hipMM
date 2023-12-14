@@ -40,7 +40,7 @@ dependencies:
 - cython>=3.0.0
 - doxygen=1.9.1
 - fmt>=9.1.0,<10
-#- gcc_linux-64=11.* #: linker issues if uses other rt libs than hipcc
+- gcc_linux-64=11.*
 - gcovr>=5.0
 - graphviz
 - identify>=2.5.20
