@@ -142,7 +142,7 @@ function(ConfigureTest TEST_NAME)
   # Test with per-thread default stream.
   string(REGEX REPLACE "_TEST$" "_PTDS_TEST" PTDS_TEST_NAME "${TEST_NAME}")
   ConfigureTestInternal("${PTDS_TEST_NAME}" ${_RMM_TEST_UNPARSED_ARGUMENTS})
-  target_compile_definitions("${PTDS_TEST_NAME}" PUBLIC CUDA_API_PER_THREAD_DEFAULT_STREAM __HIP_API_PER_THREAD_DEFAULT_STREAM__) #: HIP_API_PER_THREAD_DEFAULT_STREAM is deprecated
+  target_compile_definitions("${PTDS_TEST_NAME}" PUBLIC CUDA_API_PER_THREAD_DEFAULT_STREAM HIP_API_PER_THREAD_DEFAULT_STREAM __HIP_API_PER_THREAD_DEFAULT_STREAM__)
   target_link_libraries(${PTDS_TEST_NAME} PRIVATE ${cudart_link_libs})
 
   foreach(name ${TEST_NAME} ${PTDS_TEST_NAME} ${NS_TEST_NAME})
