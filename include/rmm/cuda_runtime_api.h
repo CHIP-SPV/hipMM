@@ -68,7 +68,7 @@
 #  define cudaMemPoolAttrReleaseThreshold hipMemPoolAttrReleaseThreshold
 #endif
 #ifndef cudaDevAttrMemoryPoolSupportedHandleTypes
-#  define cudaDevAttrMemoryPoolSupportedHandleTypes hipDevAttrMemoryPoolSupportedHandleTypes
+#  define cudaDevAttrMemoryPoolSupportedHandleTypes hipDeviceAttributeMemoryPoolSupportedHandleTypes
 #endif
 #ifndef cudaDevAttrMemoryPoolsSupported
 #  define cudaDevAttrMemoryPoolsSupported hipDeviceAttributeMemoryPoolsSupported
