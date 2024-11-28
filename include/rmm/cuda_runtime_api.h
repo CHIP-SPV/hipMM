@@ -183,6 +183,13 @@
 #  define cudaMallocManaged hipMallocManaged
 #endif
 
+#ifndef cudaHostAlloc
+  #define cudaHostAlloc hipHostAlloc
+#endif
+#ifndef cudaHostAllocDefault  
+  #define cudaHostAllocDefault hipHostAllocDefault
+#endif
+
 #ifndef cudaMemGetInfo
 #  define cudaMemGetInfo hipMemGetInfo
 #endif
