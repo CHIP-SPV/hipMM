@@ -47,20 +47,23 @@ dynamic = ["version"]
 description = "hipMM - HIP Memory Manager"
 readme = { file = "README.md", content-type = "text/markdown" }
 authors = [
+    { name = "Advanced Micro Devices, Inc." },
     { name = "NVIDIA Corporation" },
 ]
-license = { text = "Apache 2.0" }
+license = { text = "Apache 2.0 AND MIT" }
 classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Database",
     "Topic :: Scientific/Engineering",
     "License :: OSI Approved :: Apache Software License",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: C++",
     "Environment :: GPU :: NVIDIA CUDA",
+    "Environment :: GPU :: AMD ROCm"
 ]
 
 [project.urls]
-Homepage = "https://github.com/rapidsai/rmm"
+Homepage = "https://github.com/rocm/hipmm"
 
 [project.entry-points."cmake.prefix"]
 librmm = "librmm"
