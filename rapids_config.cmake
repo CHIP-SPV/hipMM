@@ -48,12 +48,16 @@ else()
       "Could not determine RAPIDS version. Contents of VERSION file:\n${_rapids_version_formatted}")
 endif()
 
-option(
-  RAPIDS_CMAKE_FROM_MODULE_PATH
-  "Do not fetch ROCmDS-CMake, assume it to be preinstalled and available via the CMAKE_MODULE_PATH."
-  $ENV{RAPIDS_CMAKE_FROM_MODULE_PATH}
+set(
+  RAPIDS_CMAKE_MODULE_PATH
+  $ENV{RAPIDS_CMAKE_MODULE_PATH}
+  CACHE FILEPATH
+  "Announce that ROCmDS-CMake is available via the provided module path."  
 )
-if(RAPIDS_CMAKE_FROM_MODULE_PATH)
+if (NOT "${RAPIDS_CMAKE_MODULE_PATH}" STREQUAL "")
+  list(APPEND CMAKE_MODULE_PATH "${RAPIDS_CMAKE_MODULE_PATH}")
+  # NOTE(HIP/AMD): needed to set rapids-cmake-dir variable
+  include(rapids-cmake)
   return()
 endif()
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/RMM_RAPIDS.cmake)
