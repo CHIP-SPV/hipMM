@@ -172,7 +172,7 @@ compatible with the ROCm installation can result in errors.
 As an alternative to the above process, you can build and install `librmm`
 using `CMake` and `make` commands, and then run tests.
 
-**Note:** `conda remove -n hipmm_dev --all`
+**Note:** This step for C++/HIP-only build of librmm does not require an active conda environment.
 
 As shown in the following commands, when compiling for AMD GPUs you must export
 the `CXX` environment variable before building so that the Cython build process
@@ -182,20 +182,20 @@ You should also provide the location of ROCm CMake scripts to `CMake` using the
 `CMAKE_PREFIX_PATH` CMake/environment variable.
 
 ```bash
-(hipmm_dev) $ export CXX="hipcc"                                # Cython CXX compiler, adjust according to your setup.
-(hipmm_dev) $ export CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}:/opt/rocm/lib/cmake" # ROCm CMake packages
-(hipmm_dev) $ mkdir build                                       # make a build directory
-(hipmm_dev) $ cd build                                          # enter the build directory
-(hipmm_dev) $ cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX     # configure CMake installation path, which must be writeable
-(hipmm_dev) $ make -j                                           # install the header only library librmm.so ... '-j' will start a parallel job using the number of physical cores available on your system
-(hipmm_dev) $ make install                                      # install the header only library librmm.so to the CMake installation path
+$ export CXX="hipcc"                                # Cython CXX compiler, adjust according to your setup.
+$ export CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}:/opt/rocm/lib/cmake" # ROCm CMake packages
+$ mkdir build                                       # make a build directory
+$ cd build                                          # enter the build directory
+$ cmake .. -DCMAKE_INSTALL_PREFIX=<customizable_writable_path>     # configure CMake installation path, which must be writeable by the current user
+$ make -j                                           # install the header only library librmm.so ... '-j' will start a parallel job using the number of physical cores available on your system
+$ make install                                      # install the header only library librmm.so to the CMake installation path
 ```
 
-Optionally run tests:
+Optionally run the C++ unit tests:
 
 ```bash
-(hipmm_dev) $ cd build  # if you are not already in build directory
-(hipmm_dev) $ make test  # this optional command will run the hipMM C++ unit tests.
+$ cd build  # if you are not already in build directory
+$ make test  # this optional command will run the hipMM C++ unit tests.
 ```
 
 ## Caching third-party dependencies
