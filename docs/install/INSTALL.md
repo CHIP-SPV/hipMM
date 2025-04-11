@@ -26,12 +26,12 @@
 myst:
   html_meta:
     "description": "ROCm Data Science (ROCm-DS) library for Data Frames."
-    "keywords": "ROCm, ROCm-DS, Data Science, RAPIDS, AMD, CUDA, Data Frames, SDK"
+    "keywords": "hipMM, RMM, data science, RAPIDS, ROCm-DS, GPU, GPU API, memory-management, memory-allocation, memory-pools"
 ---
 
 # Building and Installing hipMM
 
-**NOTE:** `hipMM` supports only AMD GPUs. Use the NVIDIA RAPIDS&reg; package for
+**NOTE:** hipMM supports only AMD GPUs. Use the NVIDIA RAPIDS&reg; package for
 NVIDIA GPUs.
 
 hipMM is not distributed as a prebuilt package via Conda. You must build
@@ -39,23 +39,22 @@ and install it as described here.
 
 ## Install Conda
 
-`hipMM` must be built inside of a predefined Conda environment to ensure that
-it is working properly. You can install Conda with
-[miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#quickstart-install-instructions),
+It is recommended to install hipMM inside of a predefined Conda environment to ensure all dependencies are correctly installed, and it is working properly.
+You can install Conda with [miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#quickstart-install-instructions),
 or the full [Anaconda distribution](https://www.anaconda.com/download).
 
 ## Building hipMM from Source
 
 ### Get hipMM Dependencies
 
-* You must have a full ROCm 6.4.0 installation on your system. See
+* You must have a full ROCm 6.4.0 or later installation on your system. See
   [ROCm installation](https://rocm.docs.amd.com/projects/install-on-linux/en/latest/)
   for more information. This guide assumes that the ROCm path is `/opt/rocm`.
-* hipMM is supported only on Ubuntu 22.04
+* hipMM supports Ubuntu 22.04
 * GPU requirements: gfx942 or gfx90a
 * `gcc` : version 9.3+
 * `cmake` : version 3.26.4+
-* hipMM requires Python versions 3.9 or 3.10 and the following Python packages:
+* hipMM requires Python version 3.10 and the following Python packages:
 
   - `scikit-build`
   - `hip-python`
@@ -91,7 +90,7 @@ To install hipMM from source, ensure the dependencies are met and follow the ste
    `rocm-${ROCM_MAJOR}-${ROCM-MINOR}-${ROCM-PATCH}` (example: `rocm-6-4-0`) in
    square brackets:
 
-   **IMPORTANT:** Some `hipMM` dependencies are currently distributed via:
+   **IMPORTANT:** Some `hipMM` dependencies are currently distributed via
    https://test.pypi.org/simple`
 
    Prior to running `pip install`, you should specify
@@ -117,7 +116,7 @@ To install hipMM from source, ensure the dependencies are met and follow the ste
    also build without installing using the `-n` option.
 
    **Note:** When building and installing `librmm` only, you can do this
-   outside of the conda environment as described in Step 5.
+   outside of the conda environment as described in *Installing librmm using cmake*.
 
    ```bash
    (hipmm_dev) $ export CXX="hipcc"    # Cython CXX compiler, adjust according to your setup.
@@ -144,12 +143,12 @@ To install hipMM from source, ensure the dependencies are met and follow the ste
    (hipmm_dev) $ python3 setup.py bdist_wheel
    ```
 
-Done! You have completed the build process, and are ready to develop for the
+The build process is complete, and you are ready to develop for the
 hipMM OSS project.
 
 ## Installing the hipMM Python wheel
 
-When you install the hipMM-ROCm Python wheel, you can again specify the ROCm
+When you install the `amd-hipmm` Python wheel, you can specify the ROCm
 version of the dependencies via the optional dependency key
 `rocm-${ROCM_MAJOR}_${ROCM_MINOR}-${ROCM-PATCH}`. Again, you need to specify an
 extra `pip` index URL to make it possible for `pip` to find some dependencies.
@@ -162,7 +161,7 @@ $ pip install ${path_to_wheel}.whl[rocm-${ROCM_MAJOR}_${ROCM_MINOR}-${ROCM-PATCH
 $ pip config set global.extra-index-url "${previous_urls}"  # optional, restore previous URLs
 ```
 
-**IMPORTANT:** Each hipMM-ROCm wheel is built for a particular ROCm version
+**IMPORTANT:** Each `amd-hipmm` wheel is built for a particular ROCm version
 with `hipMM` dependencies for that version of ROCm. Using the wheel with an
 incompatible ROCm installation or specifying dependencies that are not
 compatible with the ROCm installation can result in errors.
@@ -204,7 +203,7 @@ hipMM uses [CPM.cmake](https://github.com/TheLartians/CPM.cmake) to handle
 third-party dependencies like `spdlog`, `Thrust`, `GoogleTest`,
 `GoogleBenchmark`. In general you won't have to worry about third-party
 dependencies. If `CMake` finds an appropriate version on your system,
-it uses it. Otherwise those dependencies will be downloaded as part of the
+it uses it. Otherwise, those dependencies will be downloaded as part of the
 build.
 
 **Note:** You can help by setting `CMAKE_PREFIX_PATH` to point to the

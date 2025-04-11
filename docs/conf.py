@@ -29,7 +29,7 @@ import re
 
 from rocm_docs import ROCmDocs
 
-version_number = "v1.0.0b1"
+version_number = "1.0.0b1"
 left_nav_title = f"hipMM {version_number} Documentation"
 
 # for PDF output on Read the Docs
