@@ -56,7 +56,7 @@ or the full [Anaconda distribution](https://www.anaconda.com/download).
 * `cmake` : version 3.26.4+
 * hipMM requires Python version 3.10 and the following Python packages:
 
-  - `scikit-build`
+  - `scikit-build-core`
   - `hip-python`
   - `hip-python-as-cuda`
   - `cython`
