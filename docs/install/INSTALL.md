@@ -157,7 +157,7 @@ extra `pip` index URL to make it possible for `pip` to find some dependencies.
 $ previous_urls=$(pip config get global.extra-index-url)  # optional, save previous URLs
 $ pip config set global.extra-index-url "${previous_urls} https://test.pypi.org/simple"
 $ pip install ${path_to_wheel}.whl[rocm-${ROCM_MAJOR}_${ROCM_MINOR}-${ROCM-PATCH}]
-# example: pip install hipMM/python/dist/amd_hipmm-1.0.0b1-cp310-cp310-linux_x86_64.whl[rocm-6-4-0]
+# example: pip install hipMM/python/dist/amd_hipmm-3.0.0b1-cp310-cp310-linux_x86_64.whl[rocm-6-4-0]
 $ pip config set global.extra-index-url "${previous_urls}"  # optional, restore previous URLs
 ```
 
