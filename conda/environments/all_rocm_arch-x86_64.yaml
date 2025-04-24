@@ -27,7 +27,7 @@ channels:
 # - rapidsai #: TODO: Add AMD channel
 - conda-forge
 dependencies:
-- breathe
+- breathe>=4.35.0
 #- c-compiler #: linker issues if uses other rt libs than hipcc
 - clang-tools==16.0.6
 #- clang==16.0.6
@@ -39,7 +39,7 @@ dependencies:
 #- cxx-compiler #: linker issues if uses other rt libs than hipcc
 - cython>=3.0.0
 - doxygen=1.9.1
-- fmt>=9.1.0,<10
+- fmt>=10.1.1,<11
 - gcc_linux-64=11.*
 - gcovr>=5.0
 - graphviz
@@ -49,7 +49,7 @@ dependencies:
 - nbsphinx
 - ninja
 - numba>=0.57 # :TODO ROCm version of Numba as its own conda package?
-- numpy>=1.21
+- numpy>=1.23,<2.0a0
 - numpydoc
 # - nvcc_linux-64=11.8 #: TODO: ROCm HIP SDK as its own conda package?
 - pre-commit
@@ -58,7 +58,7 @@ dependencies:
 - python>=3.9,<3.11
 #- scikit-build>=0.13.1
 - scikit-build-core>=0.7.0
-- spdlog>=1.11.0,<1.12
+- spdlog>=1.12.0,<1.13
 - sphinx
 - sphinx-copybutton
 - sphinx-markdown-tables
