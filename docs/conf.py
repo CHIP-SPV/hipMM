@@ -39,32 +39,36 @@ copyright = "Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved
 version = version_number
 release = version_number
 cpp_maximum_signature_line_length = 10
-
-extensions = [
-    "breathe",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
-    "numpydoc",
-    "sphinx_markdown_tables",
-    "sphinx.ext.doctest",
-    "sphinx.ext.linkcode",
-    "IPython.sphinxext.ipython_console_highlighting",
-    "IPython.sphinxext.ipython_directive",
-    "nbsphinx",
-    "recommonmark",
-    "sphinx_copybutton",
-]
+setting_all_article_info = True
+all_article_info_os = ["linux"]
+all_article_info_author = ""
 
 html_theme = "rocm_docs_theme"
 html_theme_options = {"flavor": "rocm-ds"}
 
+extensions = [
+    "rocm_docs",
+    "breathe",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    # "numpydoc",
+    # "sphinx_markdown_tables",
+    # "sphinx.ext.doctest",
+    # "sphinx.ext.linkcode",
+    # "IPython.sphinxext.ipython_console_highlighting",
+    # "IPython.sphinxext.ipython_directive",
+    # "nbsphinx",
+    # "recommonmark",
+    # "sphinx_copybutton",
+]
+
 external_toc_path = "./sphinx/_toc.yml"
-docs_core = ROCmDocs(left_nav_title)
-docs_core.run_doxygen(doxygen_root="doxygen", doxygen_path="doxygen/xml")
-docs_core.setup()
+doxygen_root = "doxygen"
+doxysphinx_enabled = False
+doxygen_project = {
+    "name": "doxygen",
+    "path": "doxygen/xml",
+}
 
 external_projects_current_project = "hipMM"
-# external_toc_path = "./sphinx/_toc.yml"
-for sphinx_var in ROCmDocs.SPHINX_VARS:
-    globals()[sphinx_var] = getattr(docs_core, sphinx_var)

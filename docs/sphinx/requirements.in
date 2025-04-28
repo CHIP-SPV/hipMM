@@ -21,3 +21,4 @@
 # SOFTWARE.
 
 rocm-docs-core==1.18.2
+autodoc
