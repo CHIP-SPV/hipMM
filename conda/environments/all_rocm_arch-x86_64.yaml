@@ -24,7 +24,8 @@
 #: them to interfere with the build process. This might be not true
 #: for all commented conda packages.
 channels:
-# - rapidsai #: TODO: Add AMD channel
+- rapidsai
+- rapidsai-nightly
 - conda-forge
 dependencies:
 - breathe>=4.35.0
