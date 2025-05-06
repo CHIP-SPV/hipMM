@@ -126,11 +126,10 @@ function(ConfigureTest TEST_NAME)
     set(_RMM_TEST_PERCENT 100)
   endif()
 
-  #: TODO(HIP/AMD): rebase assess
   if(_RMM_TEST_CUDART STREQUAL SHARED)
-    set(cudart_link_libs $<COMPILE_ONLY:rmm> CUDA::cudart)
+    set(cudart_link_libs $<COMPILE_ONLY:rmm> hip::host)
   elseif(_RMM_TEST_CUDART STREQUAL STATIC)
-    set(cudart_link_libs $<COMPILE_ONLY:rmm> CUDA::cudart_static)
+    set(cudart_link_libs $<COMPILE_ONLY:rmm> hip::host)
   else()
     set(cudart_link_libs rmm)
   endif()
