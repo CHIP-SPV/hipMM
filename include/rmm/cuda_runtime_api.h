@@ -73,6 +73,9 @@
 #ifndef cudaDevAttrMemoryPoolsSupported
 #  define cudaDevAttrMemoryPoolsSupported hipDeviceAttributeMemoryPoolsSupported
 #endif
+#ifndef cudaDevAttrPageableMemoryAccess
+#  define cudaDevAttrPageableMemoryAccess hipDeviceAttributePageableMemoryAccess
+#endif
 #ifndef cudaDevAttrL2CacheSize
 #  define cudaDevAttrL2CacheSize hipDeviceAttributeL2CacheSize
 #endif
@@ -111,6 +114,9 @@
 #endif
 #ifndef cudaMemoryTypeManaged
 #  define cudaMemoryTypeManaged hipMemoryTypeManaged
+#endif
+#ifndef cudaMemoryTypeUnregistered
+#  define cudaMemoryTypeUnregistered hipMemoryTypeUnregistered
 #endif
 // functions
 #ifndef cudaDeviceGetAttribute
