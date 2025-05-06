@@ -36,10 +36,10 @@ dependencies:
 # - cuda-python>=11.7.1,<12.0a0 #: TODO: hip-python as its own conda package?
 # - cuda-version=11.8 #: TODO: ROCm HIP SDK as its own conda package?
 # - cudatoolkit #: TODO: ROCm HIP SDK as its own conda package?
-#- cxx-compiler #: linker issues if uses other rt libs than hipcc
+# - cxx-compiler #: linker issues if uses other rt libs than hipcc
 - cython>=3.0.0
 - doxygen=1.9.1
-- fmt>=10.1.1,<11
+- fmt>=11.0.2,<12
 - gcc_linux-64=11.*
 - gcovr>=5.0
 - graphviz
@@ -48,21 +48,20 @@ dependencies:
 - make
 - nbsphinx
 - ninja
-- numba>=0.57 # :TODO ROCm version of Numba as its own conda package?
-- numpy>=1.23,<2.0a0
+- numba>=0.59.1,<0.61.0a0
+- numpy>=1.23,<3.0a0
 - numpydoc
 # - nvcc_linux-64=11.8 #: TODO: ROCm HIP SDK as its own conda package?
 - pre-commit
 - pytest
 - pytest-cov
-- python>=3.9,<3.11
-#- scikit-build>=0.13.1
-- scikit-build-core>=0.7.0
-- spdlog>=1.12.0,<1.13
+- python>=3.10,<3.13
+- rapids-build-backend>=0.3.0,<0.4.0.dev0
+- scikit-build-core >=0.10.0
+- spdlog>=1.14.1,<1.15
 - sphinx
 - sphinx-copybutton
 - sphinx-markdown-tables
 - sphinx_rtd_theme
-- sysroot_linux-64==2.17
-- tomli
+- sysroot_linux-64==2.28
 name: all_rocm_arch-x86_64
