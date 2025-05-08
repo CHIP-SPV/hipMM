@@ -46,6 +46,7 @@ from rmm.pylibrmm.stream cimport Stream
 
 from rmm.pylibrmm.stream import DEFAULT_STREAM
 
+cimport cuda.bindings.cyruntime as ccudart
 from cuda.bindings.cyruntime cimport (
     cudaError,
     cudaError_t,
