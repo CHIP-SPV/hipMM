@@ -103,6 +103,9 @@ regex = "(?P<value>.*)"
 [tool.rapids-build-backend]
 build-backend = "scikit_build_core.build"
 dependencies-file = "../../dependencies.yaml"
+commit-files = [
+  "rmm/COMMIT"
+]
 matrix-entry = "cuda_suffixed=true"
 requires = [
     "cmake>=3.26.4,!=3.30.0",
