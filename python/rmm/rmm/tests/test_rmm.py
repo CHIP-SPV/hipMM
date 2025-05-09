@@ -341,14 +341,18 @@ def test_rmm_device_buffer_pickle_roundtrip(hb):
 
 
 def assert_prefetched(buffer, device_id):
-    err, dev = runtime.cudaMemRangeGetAttribute(
+    import ctypes
+    dev = ctypes.c_int(256)
+    
+    err, = runtime.cudaMemRangeGetAttribute(
+        ctypes.addressof(dev),
         4,
         runtime.cudaMemRangeAttribute.cudaMemRangeAttributeLastPrefetchLocation,
         buffer.ptr,
         buffer.size,
     )
     assert err == runtime.cudaError_t.cudaSuccess
-    assert dev == device_id
+    assert dev.value == device_id
 
 
 @pytest.mark.parametrize(
