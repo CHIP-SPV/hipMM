@@ -192,7 +192,7 @@
 #ifndef cudaHostAlloc
   #define cudaHostAlloc hipHostAlloc
 #endif
-#ifndef cudaHostAllocDefault  
+#ifndef cudaHostAllocDefault
   #define cudaHostAllocDefault hipHostAllocDefault
 #endif
 
@@ -245,4 +245,28 @@
 
 #ifndef cudaStreamQuery
 #  define cudaStreamQuery hipStreamQuery
+#endif
+
+#ifndef cudaMemPrefetchAsync
+#  define cudaMemPrefetchAsync hipMemPrefetchAsync
+#endif
+
+#ifndef cudaMemAdvise
+# define cudaMemAdvise hipMemAdvise
+#endif
+
+#ifndef cudaMemAdviseSetPreferredLocation
+#  define cudaMemAdviseSetPreferredLocation hipMemAdviseSetPreferredLocation
+#endif
+
+#ifndef cudaCpuDeviceId
+#  define cudaCpuDeviceId hipCpuDeviceId
+#endif
+
+#ifndef cudaInvalidDeviceId
+#  define cudaInvalidDeviceId hipInvalidDeviceId
+#endif
+
+#ifndef cudaMemRangeGetAttribute
+#  define cudaMemRangeGetAttribute hipMemRangeGetAttribute
 #endif
