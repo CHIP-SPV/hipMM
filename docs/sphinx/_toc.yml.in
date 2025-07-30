@@ -29,6 +29,11 @@ subtrees:
   entries: 
   - file: install/INSTALL.md
 
+- caption: Reference
+  entries:
+  - file: reference/hipmm/python_api.rst
+    title: hipMM API reference
+
 - caption: About
   entries:
   - file: license.md

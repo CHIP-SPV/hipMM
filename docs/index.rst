@@ -48,6 +48,10 @@ The hipMM documentation is structured as follows:
 
     * `Install hipMM <./install/INSTALL.html>`_
 
+  .. grid-item-card:: Reference
+
+    * :ref:`hipMM-python-api`
+
 To contribute to the documentation refer to `Contributing to ROCm-DS  <https://ROCM-DS/ROCm-DS/en/latest/contribute/contributing.html>`_.
 
 You can find licensing information on the `Licensing <https://ROCm-DS/ROCm-DS/en/latest/about/license.html>`_ page.
