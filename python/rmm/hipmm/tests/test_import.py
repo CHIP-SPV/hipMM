@@ -86,6 +86,11 @@ def test_import_hipmm():
     import hipmm.statistics
 
     from hipmm.pylibhipmm.hip_stream import HipStream
+    from hipmm.pylibhipmm.hip_stream import CudaStream
+    from hipmm.pylibhipmm.cuda_stream import CudaStream
+    from hipmm.pylibrmm.cuda_stream import CudaStream
+    from hipmm.pylibhipmm.cuda_stream import HipStream
+    from hipmm.pylibrmm.cuda_stream import HipStream
 
 def test_hipmm_attributes():
     import hipmm
