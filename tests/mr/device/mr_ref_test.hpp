@@ -14,6 +14,28 @@
  * limitations under the License.
  */
 
+// MIT License
+//
+// Modifications Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #pragma once
 
 #include "../../byte_literals.hpp"
@@ -44,6 +66,8 @@
 #include <random>
 #include <string>
 #include <utility>
+
+#include <rocm-core/rocm_version.h>
 
 using resource_ref = rmm::device_async_resource_ref;
 
@@ -151,6 +175,9 @@ inline void test_various_allocations(resource_ref ref)
   test_allocate(ref, 1_MiB);
   test_allocate(ref, 1_GiB);
 
+// NOTE(HIP/AMD): In some environments, allocating too much 
+// memory causes a segfault for ROCm 7.0.*.
+#if !(ROCM_VERSION_MAJOR == 7 && ROCM_VERSION_MINOR == 0)
   // should fail to allocate too much
   {
     void* ptr{nullptr};
@@ -164,6 +191,7 @@ inline void test_various_allocations(resource_ref ref)
       EXPECT_NE(std::string{e.what()}.find("out_of_memory"), std::string::npos);
     }
   }
+#endif
 }
 
 inline void test_various_async_allocations(rmm::device_async_resource_ref ref,
@@ -182,6 +210,9 @@ inline void test_various_async_allocations(rmm::device_async_resource_ref ref,
   test_allocate_async(ref, 1_MiB, stream);
   test_allocate_async(ref, 1_GiB, stream);
 
+// NOTE(HIP/AMD): In some environments, allocating too much 
+// memory causes a segfault for ROCm 7.0.*.
+#if !(ROCM_VERSION_MAJOR == 7 && ROCM_VERSION_MINOR == 0)
   // should fail to allocate too much
   {
     void* ptr{nullptr};
@@ -195,6 +226,7 @@ inline void test_various_async_allocations(rmm::device_async_resource_ref ref,
       EXPECT_NE(std::string{e.what()}.find("out_of_memory"), std::string::npos);
     }
   }
+#endif
 }
 
 inline void test_random_allocations(resource_ref ref,
