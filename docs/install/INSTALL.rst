@@ -37,14 +37,6 @@ environments, features, and
 interfaces <docs/install/hipMM-support.rst>`__ for more details,
 including supported GPU architectures.
 
-The following ROCm components must be installed:
-
-- `hipBLAS <https://rocm.docs.amd.com/projects/hipBLAS/en/latest/index.html>`__
-- `hipFFT <https://rocm.docs.amd.com/projects/hipFFT/en/latest/index.html>`__
-- `hipRAND <https://rocm.docs.amd.com/projects/hipRAND/en/latest/index.html>`__
-- `rocRAND <https://rocm.docs.amd.com/projects/rocRAND/en/latest/index.html>`__
-- `hipSPARSE <https://rocm.docs.amd.com/projects/hipSPARSE/en/latest/>`__
-
 The steps in this guide require a Conda installation. A minimal free
 version of Conda is `Miniforge <https://conda-forge.org/download/>`__.
 

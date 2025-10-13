@@ -31,6 +31,16 @@ hipMM supported environments, features, and interfaces
 
 hipMM requires ROCm 7.0.0 or later running on a ROCm-supported operating system. Using Ubuntu 22.04 or later is recommended.
 See `ROCm installation for Linux <https://rocm.docs.amd.com/projects/install-on-linux/en/latest/>`_
-for installation instructions. You should further have `gcc` version 11.* and  `cmake` version 3.26.4 (or later) installed.
+for installation instructions.
+
+In particular, ensure that the following ROCm components are installed:
+
+- `hipBLAS <https://rocm.docs.amd.com/projects/hipBLAS/en/latest/index.html>`__
+- `hipFFT <https://rocm.docs.amd.com/projects/hipFFT/en/latest/index.html>`__
+- `hipRAND <https://rocm.docs.amd.com/projects/hipRAND/en/latest/index.html>`__
+- `rocRAND <https://rocm.docs.amd.com/projects/rocRAND/en/latest/index.html>`__
+- `hipSPARSE <https://rocm.docs.amd.com/projects/hipSPARSE/en/latest/>`__
+
+You should further have `gcc` version 11.* and  `cmake` version 3.26.4 (or later) installed.
 
 hipMM is supported on gfx942 and gfx90a only.
