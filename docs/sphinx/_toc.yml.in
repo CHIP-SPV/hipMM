@@ -26,8 +26,9 @@ root: index
 subtrees:
 
 - caption: Install
-  entries: 
-  - file: install/INSTALL.md
+  entries:
+  - file: install/INSTALL.rst
+  - file: install/BUILD.rst
 
 - caption: Reference
   entries:
