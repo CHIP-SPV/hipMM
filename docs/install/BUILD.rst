@@ -20,24 +20,15 @@
 .. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .. SOFTWARE.
 
-Building and Installing hipMM from Source
+Building and installing hipMM from Source
 =========================================
-
-.. important::
-
-   The following section walks you through all necessary
-   steps for the build process. For your convenience, we condensed the
-   steps for the full installation including python enablement also into
-   the `install_hipmm.sh <install_hipmm.sh>`__ script. Read and edit the
-   script carefully to adapt the environment variables for your
-   installation.
 
 In the following, we give a detailed overview on how to build the C++
 components, how to run the tests and the benchmarks, and how to build
-the full hipMM installation including the Python layer.
+the full hipMM installation including the Python package.
 
-Build Procedure for C++ Component
----------------------------------
+Build procedure for C++ components
+----------------------------------
 
 Building the C++/HIP components of hipMM can be achieved via the
 following command
@@ -59,7 +50,7 @@ Running tests and benchmarks
 
 To run the tests use:
 
-.. ::code:: bash
+.. code:: bash
 
    ctest --test-dir cpp/build/
 
@@ -76,16 +67,14 @@ Build & Installation Procedure of hipMM including the Python layer
 You will perform the following steps:
 
 1. `Install Conda <#step-1-install-conda>`__
-2. `Download the hipMM
+2. `Clone the hipMM
    repository <#step-2-clone-the-hipmm-repository>`__
-3. `Create and activate hipMM Conda environment
-   ``hipmm_dev`` <#step-3-create-and-activate-hipmm-conda-environment-hipmm_dev>`__
-4. `Install hipMM into
-   ``hipmm_dev`` <#step-6-install-hipmm-into-hipmm_dev>`__
+3. `Create and activate hipMM Conda environment <#step-3-create-and-activate-the-hipmm-conda-environment>`__
+4. `Build and install hipMM <#step-4-build-and-install-hipmm>`__
 5. `Verify correctness of
-   installation <#step-7-verify-correct-installation>`__
+   installation <#step-5-verify-correct-installation>`__
 
-Step 1: Install Conda
+Step 1: Install conda
 ~~~~~~~~~~~~~~~~~~~~~
 
 hipMM must be built inside of a predefined Conda environment to ensure
@@ -118,8 +107,8 @@ repository:
    cd /tmp/hipmm
    git clone https://github.com/ROCm-DS/hipMM hipmm -b release/rocmds-ga-25.10
 
-Step 3: Create and activate hipMM Conda environment ``hipmm_dev``.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Step 3: Create and activate the hipMM conda environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Given the below conda environment (``rocm-70_build_release-x86_64.yaml``):
 
@@ -170,8 +159,8 @@ We create and activate the ``hipmm_dev`` Conda environment via:
    conda env create --name hipmm_dev --file rocm-70_build_release-x86_64.yaml
    conda activate hipmm_dev
 
-Step 4: Install hipMM into ``hipmm_dev``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Step 4: Build and install hipMM
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``build.sh`` command creates the ``build`` directory in the ``cpp``
 subfolder of the cloned hipMM git repository. You can build and install
