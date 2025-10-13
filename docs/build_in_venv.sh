@@ -23,5 +23,5 @@
 [ ! -d _venv ] && python3 -m venv _venv --system-site-packages
 source _venv/bin/activate
 python3 -m pip install -r sphinx/requirements.in
-python3 -m sphinx -T -E -b html -d _build/doctrees -D language=en . _build/html
+python3 -m sphinx -j 8 -T -E -b html -d _build/doctrees -D language=en . _build/html
 deactivate
