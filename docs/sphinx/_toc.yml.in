@@ -27,6 +27,7 @@ subtrees:
 
 - caption: Install
   entries:
+  - file: install/hipMM-support.rst
   - file: install/INSTALL.rst
   - file: install/BUILD.rst
 
