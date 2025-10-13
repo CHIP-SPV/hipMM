@@ -1,0 +1,57 @@
+# MIT License
+#
+# Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+channels:
+- rapidsai
+- rapidsai-nightly
+- conda-forge
+dependencies:
+- c-compiler
+- clang-tools==16.0.6
+- clang==16.0.6
+- cmake>=3.26.4,<4,!=3.30.0
+- cxx-compiler
+- cython>=3.0.0
+- fmt>=11.0.2,<12
+- gcc_linux-64=11.*
+- gcovr>=5.0
+- identify>=2.5.20
+- ipython
+- make
+- ninja
+- numpy>=1.23,<3.0a0
+- pre-commit
+- pytest
+- pytest-cov
+- python>=3.10,<3.13
+- rapids-build-backend>=0.3.0,<0.4.0.dev0
+- scikit-build-core >=0.10.0
+- spdlog>=1.14.1,<1.15
+- pip
+- pip:
+  - --pre
+  - --extra-index-url=https://pypi.amd.com/simple
+  - rocm-llvm-python~=7.0.0
+  - hip-python~=7.0.0
+  - hip-python-as-cuda~=7.0.0
+  - numba-hip~=0.1.3
+name: hipmm_dev
