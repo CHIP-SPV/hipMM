@@ -31,9 +31,6 @@
 HIP Memory Manager (hipMM) documentation
 ********************************************************************
 
-.. note::
-   hipMM is in an early access state. Running production workloads is not recommended.
-
 The HIP memory manager (hipMM) library supports the core ROCm-DS libraries by providing a common interface for custom
 host and device memory allocation. hipMM is derived from NVIDIA RAPIDS™ open source project RMM.
 
@@ -47,6 +44,7 @@ The hipMM documentation is structured as follows:
   .. grid-item-card:: Installation
 
     * `Install hipMM <./install/INSTALL.html>`_
+    * `Build hipMM <./install/BUILD.html>`_
 
   .. grid-item-card:: Reference
 
