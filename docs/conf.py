@@ -29,7 +29,7 @@ import re
 
 from rocm_docs import ROCmDocs
 
-version_number = "3.0.0b1"
+version_number = "3.0.0"
 left_nav_title = f"hipMM {version_number} Documentation"
 
 # for PDF output on Read the Docs
@@ -71,4 +71,10 @@ doxygen_project = {
     "path": "doxygen/xml",
 }
 
-external_projects_current_project = "hipMM"
+external_projects = [
+    "hipdf",
+    "hipmm",
+    "python",
+    "rocm",
+]
+external_projects_current_project = "hipmm"
