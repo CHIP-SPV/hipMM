@@ -86,3 +86,32 @@ command:
 
 After activating environment ``hipmm``, you can use ``import hipmm`` in
 your Python code.
+
+Verify correct installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To verify the correctness of the installation, run:
+
+.. code:: bash
+
+   conda activate hipmm
+
+   python3
+
+Then enter the following code commands:
+
+.. code:: python
+
+   import hipmm
+
+   print(hipmm.__version__)
+
+You should see output that is similar to:
+
+.. code:: text
+
+   Python 3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:45:31) [GCC 13.3.0] on linux
+   Type "help", "copyright", "credits" or "license" for more information.
+   >>> import hipmm
+   >>> print(hipmm.__version__)
+   '3.0.00'
