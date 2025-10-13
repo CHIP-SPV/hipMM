@@ -148,6 +148,7 @@ Given the below conda environment (``rocm-70_build_release-x86_64.yaml``):
    - hip-python~=7.0.0
    - hip-python-as-cuda~=7.0.0
    - numba-hip~=0.1.3
+   - amd-cupy~=13.4
    name: hipmm_dev
 
 We create and activate the ``hipmm_dev`` Conda environment via:
