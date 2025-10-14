@@ -110,7 +110,8 @@ repository:
 Step 3: Create and activate the hipMM conda environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Given the following conda environment (``rocm-70_build_release-x86_64.yaml``):
+Given the following conda environment
+(``conda/environments/build-release_rocm-latest_arch-x86_64.yaml``):
 
 .. code:: yaml
 
@@ -157,7 +158,7 @@ Create and activate the ``hipmm_dev`` Conda environment via:
 
    cd /tmp/hipmm/hipmm
 
-   conda env create --name hipmm_dev --file rocm-70_build_release-x86_64.yaml
+   conda env create --name hipmm_dev --file conda/environments/build-release_rocm-latest_arch-x86_64.yaml
    conda activate hipmm_dev
 
 Step 4: Build and install hipMM

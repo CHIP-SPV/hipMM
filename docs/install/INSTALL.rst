@@ -49,7 +49,7 @@ install hipMM via this package index.
 
 It is recommended to install hipMM into a Conda environment that contains a
 recent ``libstdcxx-ng`` package. Given the below minimal environment
-(``conda/environments/rocm-70_install-x86_64.yaml``):
+(``conda/environments/install_rocm-latest_arch-x86_64.yaml``):
 
 .. code:: yaml
 
@@ -75,7 +75,7 @@ command:
 
 .. code:: bash
 
-   conda env create -f conda/environments/rocm-70_install-x86_64.yaml
+   conda env create -f conda/environments/install_rocm-latest_arch-x86_64.yaml
 
 After activating environment ``hipmm``, you can use ``import hipmm`` in
 your Python code.
