@@ -20,7 +20,7 @@
 .. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .. SOFTWARE.
 
-Building and installing hipMM from Source
+Building and installing hipMM from source
 =========================================
 
 In the following, we give a detailed overview on how to build the C++
@@ -97,7 +97,7 @@ of `Miniforge <https://conda-forge.org/download/>`__.
 Step 2: Clone the hipMM repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We create a work directory ``/tmp/hipmm`` and clone hipMM into this
+Create a work directory ``/tmp/hipmm`` and clone hipMM into this
 repository:
 
 .. code:: bash
@@ -110,7 +110,7 @@ repository:
 Step 3: Create and activate the hipMM conda environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Given the below conda environment (``rocm-70_build_release-x86_64.yaml``):
+Given the following conda environment (``rocm-70_build_release-x86_64.yaml``):
 
 .. code:: yaml
 
@@ -151,7 +151,7 @@ Given the below conda environment (``rocm-70_build_release-x86_64.yaml``):
    - amd-cupy~=13.4
    name: hipmm_dev
 
-We create and activate the ``hipmm_dev`` Conda environment via:
+Create and activate the ``hipmm_dev`` Conda environment via:
 
 .. code:: bash
 
