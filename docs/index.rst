@@ -43,7 +43,7 @@ The hipMM documentation is structured as follows:
 
   .. grid-item-card:: Installation
 
-    * `hipDF supported environments, features, and interfaces <./install/hipMM-support.htm>`_
+    * `hipDF supported environments, features, and interfaces <./install/hipMM-support.html>`_
     * `Install hipMM <./install/INSTALL.html>`_
     * `Build hipMM <./install/BUILD.html>`_
 
