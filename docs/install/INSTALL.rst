@@ -66,7 +66,7 @@ recent ``libstdcxx-ng`` package. Given the below minimal environment
       - hip-python~=7.0.0
       - hip-python-as-cuda~=7.0.0
       - numba-hip~=0.1.3
-      - amd-cupy~=13.4
+      - amd-cupy~=13.5
       - amd-hipmm==3.0.0
    name: hipmm
 
