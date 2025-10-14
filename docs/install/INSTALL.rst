@@ -47,7 +47,7 @@ Packaged versions of hipMM and its dependencies are distributed via `AMD
 PyPI <https://pypi.amd.com/simple>`__. This section discusses how to
 install hipMM via this package index.
 
-We recommend to install hipMM into a Conda environment that contains a
+It is recommended to install hipMM into a Conda environment that contains a
 recent ``libstdcxx-ng`` package. Given the below minimal environment
 (``conda/environments/rocm-70_install-x86_64.yaml``):
 
@@ -70,7 +70,7 @@ recent ``libstdcxx-ng`` package. Given the below minimal environment
       - amd-hipmm==3.0.0
    name: hipmm
 
-We can install both the environment and hipMM in it with a single
+You can install both the environment and hipMM in it with a single
 command:
 
 .. code:: bash
