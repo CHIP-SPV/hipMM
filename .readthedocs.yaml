@@ -32,6 +32,9 @@ build:
    apt_packages:
      - "doxygen"
      - "graphviz" # For dot graphs in doxygen
+   commands:
+      - mkdir --parents _readthedocs/html/
+      - cp --recursive docs/_build/html/* _readthedocs/html/
 
 conda:
   environment: conda/environments/install_rocm-latest_arch-x86_64.yaml
