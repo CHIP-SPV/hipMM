@@ -23,10 +23,8 @@
 Installing hipMM
 ================
 
-.. important::
-
-   You can install hipMM via AMD PyPI (recommended for regular users) or build
-   and install it from source (for developers).
+You can install hipMM via AMD PyPI, which is recommended for regular users, or build
+and install it from source as described in `Building hipMM from source <BUILD.md>`__.
 
 Requirements
 ------------
@@ -47,9 +45,8 @@ Packaged versions of hipMM and its dependencies are distributed via `AMD
 PyPI <https://pypi.amd.com/simple>`__. This section discusses how to
 install hipMM via this package index.
 
-It is recommended to install hipMM into a Conda environment that contains a
-recent ``libstdcxx-ng`` package. Given the below minimal environment
-(``conda/environments/install_rocm-latest_arch-x86_64.yaml``):
+Create and activate a Conda environment with Python 3.12 and latest ``libstdcxx-ng`` using the
+minimal environment (``conda/environments/install_rocm-latest_arch-x86_64.yaml``) as shown below:
 
 .. code:: yaml
 

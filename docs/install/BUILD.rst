@@ -23,14 +23,14 @@
 Building and installing hipMM from source
 =========================================
 
-In the following, we give a detailed overview on how to build the C++
-components, how to run the tests and the benchmarks, and how to build
+The following topic provides a detailed overview on how to build the C++
+components, run the tests and the benchmarks, and how to build
 the full hipMM installation including the Python package.
 
 Build procedure for C++ components
 ----------------------------------
 
-Building the C++/HIP components of hipMM can be achieved via the
+Building the C++/HIP components of hipMM can be achieved using the
 following command
 
 .. code:: bash
@@ -42,8 +42,7 @@ respective additional functionalities.
 
 .. note::
 
-   In order to fetch the dependencies ``git`` needs to be
-   installed on your system.
+   In order to fetch the dependencies ``git`` needs to be installed on your system.
 
 Running tests and benchmarks
 ----------------------------
@@ -60,9 +59,8 @@ To run the benchmarks use:
 
    find cpp/build/benchmarks/ -type f -executable -exec {} \;
 
-
-Build & Installation Procedure of hipMM including the Python layer
-------------------------------------------------------------------
+Building and installing hipMM including the Python layer
+--------------------------------------------------------
 
 You will perform the following steps:
 
@@ -105,7 +103,7 @@ repository:
    mkdir -p /tmp/hipmm # NOTE: feel free to adapt
 
    cd /tmp/hipmm
-   git clone https://github.com/ROCm-DS/hipMM hipmm -b release/rocmds-ga-25.10
+   git clone https://github.com/ROCm-DS/hipMM hipmm -b release/rocmds-25.10
 
 Step 3: Create and activate the hipMM conda environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -193,7 +191,7 @@ environment ``hipmm_dev``. To verify the correctness of the installation, run:
 
    python3
 
-Then enter the following code commands:
+Then enter the following Python code commands:
 
 .. code:: python
 
@@ -201,7 +199,7 @@ Then enter the following code commands:
 
    print(hipmm.__version__)
 
-You should see output that is similar to:
+You should see output similar to:
 
 .. code:: text
 

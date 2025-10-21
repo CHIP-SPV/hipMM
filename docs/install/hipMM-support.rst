@@ -37,6 +37,6 @@ In particular, ensure that the following ROCm components are installed:
 - `rocRAND <https://rocm.docs.amd.com/projects/rocRAND/en/latest/index.html>`__
 - `hipSPARSE <https://rocm.docs.amd.com/projects/hipSPARSE/en/latest/>`__
 
-You should further have `gcc` version 11.* and  `cmake` version 3.26.4 (or later) installed.
+You should also have ``gcc`` version 11.* and  ``cmake`` version 3.26.4 (or later) installed.
 
 hipMM is supported on gfx942 and gfx90a only.
