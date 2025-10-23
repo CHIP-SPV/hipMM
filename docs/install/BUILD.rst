@@ -174,10 +174,10 @@ text for the script.
    (hipmm_dev) $ export CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}:/opt/rocm/lib/cmake"     # Locate ROCm CMake packages
    (hipmm_dev) $ ./build.sh librmm rmm     # Build and install librmm and rmm (can also use the default ./build.sh)
 
-**Note:** When rebuilding it is recommended to remove previous build
-files. When you are using the ``./build.sh`` script, this can be
-accomplished by additionally specifying ``clean``. For example:
-``./build.sh clean rmm``.
+.. note::
+
+   When rebuilding it is recommended to remove previous build files. When you are using the ``./build.sh`` script, this
+   can be accomplished by additionally specifying ``clean``. For example: ``./build.sh clean rmm``.
 
 Step 5: Verify correct installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

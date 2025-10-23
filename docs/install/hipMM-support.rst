@@ -39,4 +39,4 @@ In particular, ensure that the following ROCm components are installed:
 
 You should also have ``gcc`` version 11.* and  ``cmake`` version 3.26.4 (or later) installed.
 
-hipMM is supported on gfx942 and gfx90a only.
+hipMM is supported on gfx942 and gfx90a.
