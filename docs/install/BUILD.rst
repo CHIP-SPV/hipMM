@@ -23,26 +23,25 @@
 Building and installing hipMM from source
 =========================================
 
-The following topic provides a detailed overview on how to build the C++
-components, run the tests and the benchmarks, and how to build
-the full hipMM installation including the Python package.
+For developers, the following topic provides details on building the C++
+components, running tests and benchmarks, and for building
+the full hipMM installation including the Python package. End users should see the `Installation instructions <./INSTALL>`__.
 
 Build procedure for C++ components
 ----------------------------------
 
-Building the C++/HIP components of hipMM can be achieved using the
-following command
+Build the hipMM C++/HIP components using the following command:
 
 .. code:: bash
 
    ./build.sh lib tests benchmarks
 
 Here, ``tests`` and ``benchmarks`` are optional flags that enable the
-respective additional functionalities.
+respective functionality.
 
 .. note::
 
-   In order to fetch the dependencies ``git`` needs to be installed on your system.
+   To fetch the dependencies, ``git`` needs to be installed on your system.
 
 Running tests and benchmarks
 ----------------------------
@@ -53,7 +52,7 @@ To run the tests use:
 
    ctest --test-dir cpp/build/
 
-To run the benchmarks use:
+To run the benchmarks, use:
 
 .. code:: bash
 
@@ -81,8 +80,7 @@ dependencies itself, it has Cython and Python dependencies (CuPy, Numba
 HIP, hipMM, HIP Python, ROCm LLVM Python) that need to be installed into
 the hipMM Conda environment before you can build and use the package.
 
-On an x86 Linux machine it is possible to download and install
-`Miniforge <https://conda-forge.org/download/>`__ via
+On an x86 Linux machine, you can download and install `Miniforge <https://conda-forge.org/download/>`__ via:
 
 .. code:: bash
 
@@ -182,8 +180,8 @@ text for the script.
 Step 5: Verify correct installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You have just completed building and installing hipMM for use in the Conda
-environment ``hipmm_dev``. To verify the correctness of the installation, run:
+After building and installing hipMM for use in the Conda environment ``hipmm_dev``, you can
+verify the correctness of the installation as follows:
 
 .. code:: bash
 

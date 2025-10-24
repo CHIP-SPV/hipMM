@@ -23,16 +23,13 @@
 Installing hipMM
 ================
 
-You can install hipMM via AMD PyPI, which is recommended for regular users, or build
+You can install hipMM via AMD PyPI, which is recommended for end users, or build
 and install it from source as described in `Building hipMM from source <BUILD.md>`__.
 
 Requirements
 ------------
 
-hipMM requires ROCm 7.0.0 or later running on a ROCm-supported operating
-system. Using Ubuntu 22.04 or later is recommended. See `hipMM supported
-environments, features, and
-interfaces <docs/install/hipMM-support.rst>`__ for more details,
+System requirements can be found in `hipMM supported environments, features, and interfaces <docs/install/hipMM-support.rst>`__,
 including supported GPU architectures.
 
 The steps in this guide require a Conda installation. A minimal free
@@ -74,7 +71,7 @@ command:
 
    conda env create -f conda/environments/install_rocm-latest_arch-x86_64.yaml
 
-After activating environment ``hipmm``, you can use ``import hipmm`` in
+After activating the ``hipmm`` environment, you can use ``import hipmm`` in
 your Python code.
 
 Verify correct installation
