@@ -45,6 +45,9 @@ all_article_info_author = ""
 
 html_theme = "rocm_docs_theme"
 html_theme_options = {"flavor": "rocm-ds"}
+html_context = {
+    "docs_header_version": "25.10"
+}
 
 extensions = [
     "rocm_docs",
