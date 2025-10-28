@@ -20,16 +20,22 @@
 .. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .. SOFTWARE.
 
+.. meta::
+  :description: hipMM documentation and API reference library
+  :keywords: hipMM, RMM, data science, RAPIDS, ROCm-DS, GPU, GPU API, memory-management, memory-allocation, memory-pools
+
+.. _hipMM-install:
+
 Installing hipMM
 ================
 
 You can install hipMM via AMD PyPI, which is recommended for end users, or build
-and install it from source as described in `Building hipMM from source <BUILD.md>`__.
+and install it from source as described in :ref:`Building hipMM from source <hipmm-build>`.
 
 Requirements
 ------------
 
-System requirements can be found in `hipMM supported environments, features, and interfaces <docs/install/hipMM-support.rst>`__,
+System requirements can be found in :ref:`hipMM supported environments, features, and interfaces <hipmm-support>`,
 including supported GPU architectures.
 
 The steps in this guide require a Conda installation. A minimal free

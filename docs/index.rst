@@ -54,6 +54,6 @@ The hipMM documentation is structured as follows:
 
     * :ref:`hipMM-python-api`
 
-To contribute to the documentation, see `Contributing to ROCm-DS  <https://ROCM-DS/ROCm-DS/en/latest/contribute/contributing.html>`_.
+To contribute to the documentation refer to `Contributing to ROCm-DS  <https://rocm.docs.amd.com/projects/rocm-ds-internal/en/docs-25.10/contribute/contributing.html>`__.
 
-You can find licensing information on the `Licensing <https://ROCm-DS/ROCm-DS/en/latest/about/license.html>`_ page.
+You can find licensing information on the `Licenses <https://rocm.docs.amd.com/projects/rocm-ds-internal/en/docs-25.10/about/license.html>`__ page.

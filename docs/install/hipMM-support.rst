@@ -21,6 +21,12 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 
+.. meta::
+  :description: hipMM documentation and API reference library
+  :keywords: hipMM, RMM, data science, RAPIDS, ROCm-DS, GPU, GPU API, memory-management, memory-allocation, memory-pools
+
+.. _hipMM-support:
+
 *******************************************************
 hipMM supported environments, features, and interfaces
 *******************************************************

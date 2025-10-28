@@ -20,12 +20,18 @@
 .. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .. SOFTWARE.
 
+.. meta::
+  :description: hipMM documentation and API reference library
+  :keywords: hipMM, RMM, data science, RAPIDS, ROCm-DS, GPU, GPU API, memory-management, memory-allocation, memory-pools
+
+.. _hipMM-build:
+
 Building and installing hipMM from source
 =========================================
 
 For developers, the following topic provides details on building the C++
 components, running tests and benchmarks, and for building
-the full hipMM installation including the Python package. End users should see the `Installation instructions <./INSTALL>`__.
+the full hipMM installation including the Python package. End users should see the :ref:`Installation instructions <hipmm-install>`.
 
 Build procedure for C++ components
 ----------------------------------
