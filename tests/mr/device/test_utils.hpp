@@ -54,7 +54,10 @@ inline bool is_device_accessible_memory(void* ptr)
 {
   cudaPointerAttributes attributes{};
   if (cudaSuccess != cudaPointerGetAttributes(&attributes, ptr)) { return false; }
-  return attributes.devicePointer != nullptr;
+  // NOTE(HIP/AMD): system memory is accessible from device with XNACK enabled
+  return attributes.devicePointer != nullptr ||
+  (attributes.type == cudaMemoryTypeUnregistered &&
+   rmm::mr::detail::is_system_memory_supported(rmm::get_current_cuda_device()));
 }
 
 inline bool is_host_memory(void* ptr)
