@@ -502,8 +502,9 @@ struct mr_ref_test : public ::testing::TestWithParam<std::string> {
   {
     factory_obj = mr_factory_dispatch(GetParam());
     if (factory_obj->skip_test) {
-      GTEST_SKIP() << "Skipping tests since the memory resource is not supported with this CUDA "
-                   << "driver/runtime version";
+      GTEST_SKIP() << "Skipping tests since the memory resource is not supported in your environment. "
+                   << "Please check your amdgpu driver/HIP runtime version and consider enabling XNACK "
+                      "if supported in your environment (export HSA_XNACK=1).";
     }
     ref = factory_obj->mr;
   }

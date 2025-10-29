@@ -63,8 +63,8 @@ class SystemMRTest : public ::testing::Test {
   void SetUp() override
   {
     if (!rmm::mr::detail::is_system_memory_supported(rmm::get_current_cuda_device())) {
-      GTEST_SKIP() << "Skipping tests since system memory allocator not supported with this "
-                      "hardware/software version";
+      GTEST_SKIP() << "Skipping tests since system memory allocator is either not supported with this "
+                      "hardware/software version or XNACK is disabled. Consider setting the environment variable HSA_XNACK (export HSA_XNACK=1).";
     }
   }
 };
