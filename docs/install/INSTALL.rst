@@ -44,8 +44,14 @@ version of Conda is `Miniforge <https://conda-forge.org/download/>`__.
 Install hipMM via AMD PyPI
 --------------------------
 
+```{warning}
+
+   Only install hipMM using AMD’s official package index. To ensure security, integrity, and supportability of your builds,
+   consume packages exclusively from AMD’s official package index. Do not install, mirror, or resolve dependencies from any
+   third‑party or unofficial indexes.
+
 Packaged versions of hipMM and its dependencies are distributed via `AMD
-PyPI <https://pypi.amd.com/simple>`__. This section discusses how to
+PyPI <https://pypi.amd.com/rocm-7.0.2/simple>`__. This section discusses how to
 install hipMM via this package index.
 
 Create and activate a Conda environment with Python 3.12 and latest ``libstdcxx-ng`` using the
@@ -61,12 +67,12 @@ minimal environment (``conda/environments/install_rocm-latest_arch-x86_64.yaml``
    - pip
    - pip:
       - --pre
-      - --extra-index-url=https://pypi.amd.com/simple
-      - rocm-llvm-python~=7.0.0
-      - hip-python~=7.0.0
-      - hip-python-as-cuda~=7.0.0
+      - --extra-index-url=https://pypi.amd.com/rocm-7.0.2/simple
+      - rocm-llvm-python~=7.0.2
+      - hip-python~=7.0.2
+      - hip-python-as-cuda~=7.0.2
       - numba-hip~=0.1.3
-      - amd-cupy~=13.5
+      - amd-cupy~=13.5.1
       - amd-hipmm==3.0.0
    name: hipmm
 
