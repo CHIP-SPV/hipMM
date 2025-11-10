@@ -44,7 +44,7 @@ version of Conda is `Miniforge <https://conda-forge.org/download/>`__.
 Install hipMM via AMD PyPI
 --------------------------
 
-```{warning}
+.. warning::
 
    Only install hipMM using AMD’s official package index. To ensure security, integrity, and supportability of your builds,
    consume packages exclusively from AMD’s official package index. Do not install, mirror, or resolve dependencies from any
