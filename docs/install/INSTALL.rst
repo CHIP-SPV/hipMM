@@ -68,9 +68,9 @@ minimal environment (``conda/environments/install_rocm-latest_arch-x86_64.yaml``
    - pip:
       - --pre
       - --extra-index-url=https://pypi.amd.com/rocm-7.0.2/simple
-      - rocm-llvm-python~=7.0.2
-      - hip-python~=7.0.2
-      - hip-python-as-cuda~=7.0.2
+      - rocm-llvm-python~=7.0.2.0
+      - hip-python~=7.0.2.0
+      - hip-python-as-cuda~=7.0.2.0
       - numba-hip~=0.1.3
       - amd-cupy~=13.5.1
       - amd-hipmm==3.0.0
