@@ -127,9 +127,9 @@ function(ConfigureTest TEST_NAME)
   endif()
 
   if(_RMM_TEST_CUDART STREQUAL SHARED)
-    set(cudart_link_libs $<COMPILE_ONLY:rmm> hip::host)
+    set(cudart_link_libs rmm hip::host)
   elseif(_RMM_TEST_CUDART STREQUAL STATIC)
-    set(cudart_link_libs $<COMPILE_ONLY:rmm> hip::host)
+    set(cudart_link_libs rmm hip::host)
   else()
     set(cudart_link_libs rmm)
   endif()
@@ -168,7 +168,10 @@ ConfigureTest(DEVICE_MR_REF_TEST mr/device/mr_ref_tests.cpp
               mr/device/mr_ref_multithreaded_tests.cpp GPUS 1 PERCENT 100)
 
 # general adaptor tests
-ConfigureTest(ADAPTOR_TEST mr/device/adaptor_tests.cpp)
+# chipStar: Skip ADAPTOR_TEST due to hipspv-link address space cast limitations
+if(NOT _CHIPSTAR_DETECTED)
+  ConfigureTest(ADAPTOR_TEST mr/device/adaptor_tests.cpp)
+endif()
 
 # pool mr tests
 ConfigureTest(POOL_MR_TEST mr/device/pool_mr_tests.cpp GPUS 1 PERCENT 100)
@@ -180,7 +183,10 @@ ConfigureTest(CUDA_ASYNC_MR_SHARED_CUDART_TEST mr/device/cuda_async_mr_tests.cpp
               CUDART SHARED)
 
 # thrust allocator tests
-ConfigureTest(THRUST_ALLOCATOR_TEST mr/device/thrust_allocator_tests.cu GPUS 1 PERCENT 60)
+# chipStar: Skip THRUST_ALLOCATOR_TEST due to rocThrust missing functions and unimplemented iterators
+if(NOT _CHIPSTAR_DETECTED)
+  ConfigureTest(THRUST_ALLOCATOR_TEST mr/device/thrust_allocator_tests.cu GPUS 1 PERCENT 60)
+endif()
 
 # polymorphic allocator tests
 ConfigureTest(POLYMORPHIC_ALLOCATOR_TEST mr/device/polymorphic_allocator_tests.cpp)
@@ -218,7 +224,10 @@ ConfigureTest(PINNED_POOL_MR_TEST mr/host/pinned_pool_mr_tests.cpp)
 ConfigureTest(CUDA_STREAM_TEST cuda_stream_tests.cpp cuda_stream_pool_tests.cpp)
 
 # device buffer tests
-ConfigureTest(DEVICE_BUFFER_TEST device_buffer_tests.cu)
+# chipStar: Skip DEVICE_BUFFER_TEST due to rocThrust unimplemented zip_iterator patterns
+if(NOT _CHIPSTAR_DETECTED)
+  ConfigureTest(DEVICE_BUFFER_TEST device_buffer_tests.cu)
+endif()
 
 # device scalar tests
 ConfigureTest(DEVICE_SCALAR_TEST device_scalar_tests.cpp)

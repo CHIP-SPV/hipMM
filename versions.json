@@ -1,4 +1,9 @@
 {
-  "packages" : {
+  "packages": {
+    "rocthrust": {
+      "version": "3.3.0",
+      "git_url": "https://github.com/${RAPIDS_CMAKE_ROCM_ORG}/rocThrust",
+      "git_tag": "We-always-use-find_package-for-rocthrust."
+    }
   }
 }

@@ -1,0 +1,1 @@
+cd /space/pvelesko/chipStar/hipMM && source /etc/profile.d/modules.sh && module load HIP/chipStar/test rocPRIM/test rocThrust hipCUB llvm/19.0 && cd build && find . -mindepth 1 -delete && cmake .. && python3 fix_chipstar_flags.py && ninja -j $(nproc) && ctest --output-on-failure

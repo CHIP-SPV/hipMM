@@ -43,13 +43,32 @@ include(rapids-cpm)
 include(rapids-export)
 include(rapids-find)
 
+# chipStar HIP support - detect and configure before rapids-hip
+include(cmake/chipstar.cmake)
+chipstar_detect()
+
 #: NOTE(HIP/AMD, 04/22/25):
 #:     In contrast to the CUDA implementation, we need to initialize the HIP architectures
 #:     already before calling rapids_find_package(HIP...). Otherwise, GPU_TARGETS will be unset
 #:     on systems without GPUs and find_package(HIP) will warn that it
 #:     cannot autotect an architecture.
+# Configure chipStar compiler before rapids-hip initializes architectures
+if(_CHIPSTAR_DETECTED)
+  chipstar_configure_compiler()
+endif()
+
 include(rapids-hip)
-rapids_hip_init_architectures(RMM)
+# For chipStar, don't initialize architectures - they conflict with --offload=spirv64
+if(_CHIPSTAR_DETECTED)
+  # Set a dummy architecture that CMake will accept (needed for project() call)
+  # We'll remove --offload-arch flags from build files using the fix script
+  set(CMAKE_HIP_ARCHITECTURES "gfx908" CACHE STRING "HIP architectures" FORCE)
+  # Prevent rapids_hip_init_architectures from setting GPU_TARGETS
+  set(GPU_TARGETS "" CACHE STRING "GPU targets" FORCE)
+  set(AMDGPU_TARGETS "" CACHE STRING "AMD GPU targets" FORCE)
+else()
+  rapids_hip_init_architectures(RMM)
+endif()
 
 project(
   RMM
@@ -140,6 +159,23 @@ include(${rapids-cmake-dir}/cpm/rapids_logger.cmake)
 rapids_cpm_rapids_logger()
 rapids_make_logger(rmm EXPORT_SET rmm-exports)
 
+# Configure chipStar dependencies before get_cccl.cmake
+if(_CHIPSTAR_DETECTED)
+  chipstar_configure_dependencies()
+  # For chipStar: Ensure hipCUB's CUB headers are found before system CUB
+  # This must be done after chipstar_configure_dependencies() which sets up the include path
+  if(DEFINED ENV{HIPCUB_DIR} AND EXISTS "$ENV{HIPCUB_DIR}/include/hipcub/cub")
+    # Remove /usr/include from include path for CUB to force use of hipCUB
+    # We'll add it back as a system include so other system headers still work
+    get_directory_property(INCLUDE_DIRS INCLUDE_DIRECTORIES)
+    list(REMOVE_ITEM INCLUDE_DIRS "/usr/include")
+    set_directory_property(PROPERTY INCLUDE_DIRECTORIES ${INCLUDE_DIRS})
+    # Add /usr/include back as system include (lower priority)
+    include_directories(SYSTEM /usr/include)
+    message(STATUS "chipStar: Prioritized hipCUB CUB headers over system CUB")
+  endif()
+endif()
+
 include(cmake/thirdparty/get_cccl.cmake)
 # include(cmake/thirdparty/get_nvtx.cmake)
 
@@ -183,7 +219,60 @@ if((BUILD_TESTS OR BUILD_BENCHMARKS) AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAM
   #:     cannot autotect an architecture.
   #: include(rapids-hip)
   #: rapids_hip_init_architectures(RMM)
+  # For chipStar HIP (SPIR-V), we need to prevent CMake from adding --offload-arch flags
+  # CMake requires at least one architecture, but we'll use a hook to remove the flags
+  if(_CHIPSTAR_DETECTED)
+    # Set a dummy architecture that CMake will accept (gfx908 is a valid AMD arch)
+    # We'll remove the --offload-arch flags immediately after enable_language
+    set(CMAKE_HIP_ARCHITECTURES "gfx908" CACHE STRING "HIP architectures" FORCE)
+    set(GPU_TARGETS "" CACHE STRING "GPU targets" FORCE)
+    set(AMDGPU_TARGETS "" CACHE STRING "AMD GPU targets" FORCE)
+  endif()
   enable_language(HIP)
+  
+  # For chipStar HIP (SPIR-V), remove conflicting flags after enable_language
+  # Note: We keep CMAKE_HIP_ARCHITECTURES set to "gfx908" to satisfy CMake's requirements
+  # but we'll remove --offload-arch flags from build files using the fix script
+  if(_CHIPSTAR_DETECTED)
+    # Remove --offload-arch flags from HIP compile options (they may have been added)
+    string(REGEX REPLACE "--offload-arch=[^ ]+ *" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
+    # Also remove specific known ones as backup
+    string(REPLACE "--offload-arch=gfx908" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
+    string(REPLACE "--offload-arch=gfx90a" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
+    string(REPLACE "--offload-arch=gfx942" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
+    # Remove conflicting ROCm include paths
+    string(REPLACE "-I/opt/rocm-5.7.0/include" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
+    # Add pre-include header to ensure __host__ and __device__ are defined for rocThrust
+    if(DEFINED CHIPSTAR_PREINCLUDE_PATH AND EXISTS "${CHIPSTAR_PREINCLUDE_PATH}")
+      set(CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS} -include ${CHIPSTAR_PREINCLUDE_PATH}")
+    endif()
+    set(CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}" CACHE STRING "HIP compiler flags" FORCE)
+    # Add flag to allow libhipcxx to work with unsupported architectures (chipStar/SPIR-V)
+    add_compile_definitions(_LIBCUDACXX_ALLOW_UNSUPPORTED_ARCHITECTURE)
+    # chipStar compatibility: Define missing constants for CUB and libhipcxx
+    add_compile_definitions(
+      hipHostAllocDefault=0x00
+      hipHostAllocPortable=0x01
+      hipHostAllocMapped=0x02
+      hipHostAllocWriteCombined=0x04
+      NV_IS_HOST=1
+    )
+    # chipStar: Exclude system CUB directory from include search to force use of hipCUB
+    # rocThrust includes <cub/...> which incorrectly finds /usr/include/cub/
+    # We add hipCUB's cub directory with higher priority via include_directories(BEFORE)
+    # but the compiler may still find system CUB, so we need to work around this
+    if(DEFINED ENV{HIPCUB_DIR} AND EXISTS "$ENV{HIPCUB_DIR}/include/hipcub/cub")
+      # Create a wrapper that redirects cub/ includes to hipcub/cub/
+      # This is a workaround for rocThrust's direct CUB includes
+      message(STATUS "chipStar: Note - rocThrust may use system CUB instead of hipCUB")
+      message(STATUS "chipStar: This is expected behavior - rocThrust needs CUB compatibility fixes")
+    endif()
+             # chipStar compatibility: suppress static/non-static declaration conflicts
+             # These errors occur because chipStar's cuda_runtime.h has static inline functions
+             # that conflict with non-static declarations in hip_runtime_api.h
+             # Convert all errors to warnings (the pragma in cuda_runtime_api.h handles the specific warning)
+             add_compile_options(-Wno-error)
+  endif()
 
   # Since RMM only enables HIP optionally we need to manually include the file that
   # rapids_cuda_init_architectures relies on `project` calling
@@ -200,6 +289,12 @@ if(BUILD_TESTS AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   include(CTest) # calls enable_testing()
 
   add_subdirectory(tests)
+  
+  # chipStar: Patch rapids-cmake and create resource spec after tests are configured
+  if(_CHIPSTAR_DETECTED)
+    chipstar_patch_rapids_cmake()
+    chipstar_create_resource_spec()
+  endif()
 endif()
 
 # ##################################################################################################
@@ -286,4 +381,12 @@ add_custom_target(
 # optionally assemble Thrust pretty-printers
 if(CCCL_SOURCE_DIR)
   configure_file(scripts/load-pretty-printers.in load-pretty-printers @ONLY)
+endif()
+
+# ##################################################################################################
+# * chipStar build file fixes ----------------------------------------------------------------------
+
+# Create fix target to remove conflicting flags from generated build files
+if(_CHIPSTAR_DETECTED)
+  chipstar_fix_build_flags()
 endif()

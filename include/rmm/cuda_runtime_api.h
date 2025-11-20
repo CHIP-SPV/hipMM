@@ -22,9 +22,94 @@
 
 #pragma once
 
+// chipStar compatibility: include cuda_runtime.h first to get cuda* function definitions
+#ifdef __HIP_PLATFORM_SPIRV__
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wstatic-non-static-function"
+  #include <cuspv/cuda_runtime.h>
+#endif
+
 #include <hip/hip_runtime_api.h>
 
+// chipStar compatibility: Define hipHostAlloc constants that libhipcxx expects
+// These must be defined before any libhipcxx headers are included
+#ifdef __HIP_PLATFORM_SPIRV__
+  #ifndef hipHostAllocDefault
+    #define hipHostAllocDefault 0x00
+  #endif
+  #ifndef hipHostAllocPortable
+    #define hipHostAllocPortable 0x01
+  #endif
+  #ifndef hipHostAllocMapped
+    #define hipHostAllocMapped 0x02
+  #endif
+  #ifndef hipHostAllocWriteCombined
+    #define hipHostAllocWriteCombined 0x04
+  #endif
+#endif
+
 #define CUDART_VERSION 0
+
+// chipStar compatibility: Define missing CUDA error codes that rocThrust expects
+#ifdef __HIP_PLATFORM_SPIRV__
+  #ifndef cudaErrorMemoryValueTooLarge
+    #define cudaErrorMemoryValueTooLarge hipErrorUnknown
+  #endif
+  #ifndef cudaErrorECCUncorrectable
+    #define cudaErrorECCUncorrectable hipErrorECCNotCorrectable
+  #endif
+  #ifndef cudaErrorApiFailureBase
+    #define cudaErrorApiFailureBase hipErrorUnknown
+  #endif
+  #ifndef cudaErrorLaunchTimeout
+    #define cudaErrorLaunchTimeout hipErrorLaunchTimeOut
+  #endif
+  #ifndef cudaErrorUnmapBufferObjectFailed
+    #define cudaErrorUnmapBufferObjectFailed hipErrorMapBufferObjectFailed
+  #endif
+  #ifndef cudaErrorInvalidHostPointer
+    #define cudaErrorInvalidHostPointer hipErrorInvalidValue
+  #endif
+  #ifndef cudaErrorStartupFailure
+    #define cudaErrorStartupFailure hipErrorUnknown
+  #endif
+  #ifndef cudaErrorInvalidTexture
+    #define cudaErrorInvalidTexture hipErrorInvalidValue
+  #endif
+  #ifndef cudaErrorInvalidTextureBinding
+    #define cudaErrorInvalidTextureBinding hipErrorInvalidValue
+  #endif
+  #ifndef cudaErrorInvalidChannelDescriptor
+    #define cudaErrorInvalidChannelDescriptor hipErrorInvalidValue
+  #endif
+  #ifndef cudaErrorAddressOfConstant
+    #define cudaErrorAddressOfConstant hipErrorInvalidValue
+  #endif
+  #ifndef cudaErrorTextureFetchFailed
+    #define cudaErrorTextureFetchFailed hipErrorUnknown
+  #endif
+  #ifndef cudaErrorTextureNotBound
+    #define cudaErrorTextureNotBound hipErrorUnknown
+  #endif
+  #ifndef cudaErrorSynchronizationError
+    #define cudaErrorSynchronizationError hipErrorUnknown
+  #endif
+  #ifndef cudaErrorInvalidFilterSetting
+    #define cudaErrorInvalidFilterSetting hipErrorInvalidValue
+  #endif
+  #ifndef cudaErrorInvalidNormSetting
+    #define cudaErrorInvalidNormSetting hipErrorInvalidValue
+  #endif
+  #ifndef cudaErrorMixedDeviceExecution
+    #define cudaErrorMixedDeviceExecution hipErrorUnknown
+  #endif
+  #ifndef cudaErrorCudartUnloading
+    #define cudaErrorCudartUnloading hipErrorUnknown
+  #endif
+  #ifndef cudaErrorNotYetImplemented
+    #define cudaErrorNotYetImplemented hipErrorNotSupported
+  #endif
+#endif
 
 // types
 #ifndef cudaError_t
@@ -120,21 +205,29 @@
 #endif
 // functions
 #ifndef cudaDeviceGetAttribute
-#  define cudaDeviceGetAttribute hipDeviceGetAttribute
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaDeviceGetAttribute hipDeviceGetAttribute
+#  endif
 #endif
 #ifndef cudaDeviceGetDefaultMemPool
 #  define cudaDeviceGetDefaultMemPool hipDeviceGetDefaultMemPool
 #endif
 #ifndef cudaDeviceSynchronize
-#  define cudaDeviceSynchronize hipDeviceSynchronize
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaDeviceSynchronize hipDeviceSynchronize
+#  endif
 #endif
 
 #ifndef cudaDriverGetVersion
-#  define cudaDriverGetVersion hipDriverGetVersion
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaDriverGetVersion hipDriverGetVersion
+#  endif
 #endif
 
 #ifndef cudaEventCreateWithFlags
-#  define cudaEventCreateWithFlags hipEventCreateWithFlags
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaEventCreateWithFlags hipEventCreateWithFlags
+#  endif
 #endif
 #ifndef cudaEventDestroy
 #  define cudaEventDestroy hipEventDestroy
@@ -157,20 +250,39 @@
 #endif
 
 #ifndef cudaGetDevice
-#  define cudaGetDevice hipGetDevice
+#  ifdef __HIP_PLATFORM_SPIRV__
+#    // chipStar: cudaGetDevice is already defined as static inline in cuda_runtime.h
+#    // Just ensure it's available by including the header
+#  else
+#    define cudaGetDevice hipGetDevice
+#  endif
 #endif
 #ifndef cudaGetDeviceCount
-#  define cudaGetDeviceCount hipGetDeviceCount
+#  ifdef __HIP_PLATFORM_SPIRV__
+#    // chipStar: cudaGetDeviceCount is already defined as static inline in cuda_runtime.h
+#  else
+#    define cudaGetDeviceCount hipGetDeviceCount
+#  endif
 #endif
 
 #ifndef cudaGetErrorName
-#  define cudaGetErrorName hipGetErrorName
+#  ifdef __HIP_PLATFORM_SPIRV__
+#    // chipStar: cudaGetErrorName is already defined as static inline in cuda_runtime.h
+#  else
+#    define cudaGetErrorName hipGetErrorName
+#  endif
 #endif
 #ifndef cudaGetErrorString
-#  define cudaGetErrorString hipGetErrorString
+#  ifdef __HIP_PLATFORM_SPIRV__
+#    // chipStar: cudaGetErrorString is already defined as static inline in cuda_runtime.h
+#  else
+#    define cudaGetErrorString hipGetErrorString
+#  endif
 #endif
 #ifndef cudaGetLastError
-#  define cudaGetLastError hipGetLastError
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaGetLastError hipGetLastError
+#  endif
 #endif
 
 #ifndef cudaMallocAsync
@@ -193,6 +305,21 @@
   #define cudaHostAlloc hipHostAlloc
 #endif
 #ifndef cudaHostAllocDefault
+  #ifdef __HIP_PLATFORM_SPIRV__
+    // chipStar: Define hipHostAlloc constants if not available
+    #ifndef hipHostAllocDefault
+      #define hipHostAllocDefault 0x00
+    #endif
+    #ifndef hipHostAllocPortable
+      #define hipHostAllocPortable 0x01
+    #endif
+    #ifndef hipHostAllocMapped
+      #define hipHostAllocMapped 0x02
+    #endif
+    #ifndef hipHostAllocWriteCombined
+      #define hipHostAllocWriteCombined 0x04
+    #endif
+  #endif
   #define cudaHostAllocDefault hipHostAllocDefault
 #endif
 
@@ -217,24 +344,39 @@
 #endif
 
 #ifndef cudaSetDevice
-#  define cudaSetDevice hipSetDevice
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaSetDevice hipSetDevice
+#  endif
 #endif
 
 #ifndef cudaStreamCreate
-#  define cudaStreamCreate hipStreamCreate
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaStreamCreate hipStreamCreate
+#  endif
 #endif
 #ifndef cudaStreamDestroy
-#  define cudaStreamDestroy hipStreamDestroy
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaStreamDestroy hipStreamDestroy
+#  endif
 #endif
 #ifndef cudaStreamSynchronize
-#  define cudaStreamSynchronize hipStreamSynchronize
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaStreamSynchronize hipStreamSynchronize
+#  else
+#    // chipStar: hipStreamSynchronize is already defined as static inline in cuda_runtime.h
+#    // Use the static inline version instead of the macro
+#  endif
 #endif
 
 #ifndef cudaStreamWaitEvent
-#  define cudaStreamWaitEvent(a,b,c) hipStreamWaitEvent(a,b,c)
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaStreamWaitEvent(a,b,c) hipStreamWaitEvent(a,b,c)
+#  endif
 #endif
 #ifndef cudaEventCreate
-#  define cudaEventCreate hipEventCreate
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaEventCreate hipEventCreate
+#  endif
 #endif
 #ifndef cudaPointerGetAttributes
 #  define cudaPointerGetAttributes hipPointerGetAttributes
@@ -244,7 +386,9 @@
 #endif
 
 #ifndef cudaStreamQuery
-#  define cudaStreamQuery hipStreamQuery
+#  ifndef __HIP_PLATFORM_SPIRV__
+#    define cudaStreamQuery hipStreamQuery
+#  endif
 #endif
 
 #ifndef cudaMemPrefetchAsync
@@ -253,6 +397,11 @@
 
 #ifndef cudaMemAdvise
 # define cudaMemAdvise hipMemAdvise
+#endif
+
+// chipStar compatibility: restore diagnostics at end of file
+#ifdef __HIP_PLATFORM_SPIRV__
+  #pragma clang diagnostic pop
 #endif
 
 #ifndef cudaMemAdviseSetPreferredLocation
