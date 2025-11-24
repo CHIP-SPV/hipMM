@@ -506,8 +506,8 @@ TEST_F(ArenaTest, SmallMediumLarge)  // NOLINT
     auto* small     = mr.allocate(256);
     auto* medium    = mr.allocate(64_MiB);
     auto const free = rmm::available_device_memory().first;
-    // chipStar: Cap large allocation at 512MB to work around single allocation limit
-    constexpr std::size_t max_alloc_size{512_MiB};
+    // chipStar: Cap large allocation at 256MB to ensure total arena size stays under 4GB limit
+    constexpr std::size_t max_alloc_size{256_MiB};
     auto alloc_size = std::min(free / 3, max_alloc_size);
     auto* large     = mr.allocate(alloc_size);
     mr.deallocate(small, 256);
