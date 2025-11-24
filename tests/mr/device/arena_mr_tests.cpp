@@ -31,6 +31,7 @@
 #include <gtest/gtest.h>
 #include <sys/stat.h>
 
+#include <algorithm>
 #include <memory>
 #include <thread>
 #include <vector>
@@ -491,7 +492,9 @@ TEST_F(ArenaTest, SizeSmallerThanSuperblockSize)  // NOLINT
 TEST_F(ArenaTest, AllocateNinetyPercent)  // NOLINT
 {
   EXPECT_NO_THROW([]() {  // NOLINT(cppcoreguidelines-avoid-goto)
-    auto const ninety_percent = rmm::percent_of_free_device_memory(90);
+    // chipStar: Cap arena size at 2GB to work around single allocation limit
+    constexpr std::size_t max_arena_size{2_GiB};
+    auto const ninety_percent = std::min(rmm::percent_of_free_device_memory(90), max_arena_size);
     arena_mr mr(rmm::mr::get_current_device_resource_ref(), ninety_percent);
   }());
 }
@@ -503,10 +506,13 @@ TEST_F(ArenaTest, SmallMediumLarge)  // NOLINT
     auto* small     = mr.allocate(256);
     auto* medium    = mr.allocate(64_MiB);
     auto const free = rmm::available_device_memory().first;
-    auto* large     = mr.allocate(free / 3);
+    // chipStar: Cap large allocation at 512MB to work around single allocation limit
+    constexpr std::size_t max_alloc_size{512_MiB};
+    auto alloc_size = std::min(free / 3, max_alloc_size);
+    auto* large     = mr.allocate(alloc_size);
     mr.deallocate(small, 256);
     mr.deallocate(medium, 64_MiB);
-    mr.deallocate(large, free / 3);
+    mr.deallocate(large, alloc_size);
   }());
 }
 

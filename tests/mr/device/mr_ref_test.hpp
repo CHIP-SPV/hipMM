@@ -62,6 +62,7 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <cstddef>
 #include <random>
 #include <string>
@@ -398,8 +399,11 @@ inline auto make_system()
 
 inline auto make_pool()
 {
+  // chipStar: Cap pool size at 2GB to work around single allocation limit
+  constexpr std::size_t max_pool_size{2_GiB};
+  auto pool_size = std::min(rmm::percent_of_free_device_memory(50), max_pool_size);
   return rmm::mr::make_owning_wrapper<rmm::mr::pool_memory_resource>(
-    make_cuda(), rmm::percent_of_free_device_memory(50));
+    make_cuda(), pool_size);
 }
 
 inline auto make_host_pinned_pool()
@@ -410,7 +414,11 @@ inline auto make_host_pinned_pool()
 
 inline auto make_arena()
 {
-  return rmm::mr::make_owning_wrapper<rmm::mr::arena_memory_resource>(make_cuda());
+  // chipStar: Cap arena size at 2GB to work around single allocation limit
+  constexpr std::size_t max_arena_size{2_GiB};
+  auto arena_size = std::min(rmm::percent_of_free_device_memory(50), max_arena_size);
+  return rmm::mr::make_owning_wrapper<rmm::mr::arena_memory_resource>(
+    make_cuda(), arena_size);
 }
 
 inline auto make_fixed_size()

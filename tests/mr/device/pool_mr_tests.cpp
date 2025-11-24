@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include "../../byte_literals.hpp"
+
 #include <rmm/aligned.hpp>
 #include <rmm/cuda_device.hpp>
 #include <rmm/detail/error.hpp>
@@ -25,6 +27,7 @@
 #include <rmm/mr/device/per_device_resource.hpp>
 #include <rmm/mr/device/pool_memory_resource.hpp>
 
+#include <algorithm>
 #include <gtest/gtest.h>
 
 // explicit instantiation for test coverage purposes
@@ -59,7 +62,9 @@ TEST(PoolTest, AllocateNinetyPercent)
   auto allocate_ninety = []() {
     auto const [free, total] = rmm::available_device_memory();
     (void)total;
-    auto const ninety_percent_pool = rmm::percent_of_free_device_memory(90);
+    // chipStar: Cap pool size at 2GB to work around single allocation limit
+    constexpr std::size_t max_pool_size{2_GiB};
+    auto const ninety_percent_pool = std::min(rmm::percent_of_free_device_memory(90), max_pool_size);
     pool_mr mr{rmm::mr::get_current_device_resource_ref(), ninety_percent_pool};
   };
   EXPECT_NO_THROW(allocate_ninety());
@@ -69,11 +74,17 @@ TEST(PoolTest, TwoLargeBuffers)
 {
   auto two_large = []() {
     [[maybe_unused]] auto const [free, total] = rmm::available_device_memory();
-    pool_mr mr{rmm::mr::get_current_device_resource_ref(), rmm::percent_of_free_device_memory(50)};
-    auto* ptr1 = mr.allocate(free / 4);
-    auto* ptr2 = mr.allocate(free / 4);
-    mr.deallocate(ptr1, free / 4);
-    mr.deallocate(ptr2, free / 4);
+    // chipStar: Cap pool size at 2GB to work around single allocation limit
+    constexpr std::size_t max_pool_size{2_GiB};
+    auto pool_size = std::min(rmm::percent_of_free_device_memory(50), max_pool_size);
+    pool_mr mr{rmm::mr::get_current_device_resource_ref(), pool_size};
+    // Cap individual allocations to reasonable size
+    constexpr std::size_t max_alloc_size{512_MiB};
+    auto alloc_size = std::min(free / 4, max_alloc_size);
+    auto* ptr1 = mr.allocate(alloc_size);
+    auto* ptr2 = mr.allocate(alloc_size);
+    mr.deallocate(ptr1, alloc_size);
+    mr.deallocate(ptr2, alloc_size);
   };
   EXPECT_NO_THROW(two_large());
 }
