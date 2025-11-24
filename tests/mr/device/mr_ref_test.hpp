@@ -68,7 +68,9 @@
 #include <string>
 #include <utility>
 
+#if defined(__HIP_PLATFORM_AMD__)
 #include <rocm-core/rocm_version.h>
+#endif
 
 using resource_ref = rmm::device_async_resource_ref;
 
