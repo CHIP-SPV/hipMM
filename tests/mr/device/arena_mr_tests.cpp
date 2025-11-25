@@ -47,7 +47,7 @@ class mock_memory_resource {
   MOCK_METHOD(void, deallocate_async, (void*, std::size_t, std::size_t, cuda::stream_ref));
   bool operator==(mock_memory_resource const&) const noexcept { return true; }
   bool operator!=(mock_memory_resource const&) const { return false; }
-  friend void get_property(mock_memory_resource const&, cuda::mr::device_accessible) noexcept {}
+  [[maybe_unused]] friend void get_property(mock_memory_resource const&, cuda::mr::device_accessible) noexcept {}
 };
 
 static_assert(cuda::mr::async_resource_with<mock_memory_resource, cuda::mr::device_accessible>);

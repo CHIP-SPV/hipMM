@@ -66,7 +66,7 @@ void BM_UvectorSizeConstruction(benchmark::State& state)
 
   for (auto _ : state) {  // NOLINT(clang-analyzer-deadcode.DeadStores)
     rmm::device_uvector<std::int32_t> vec(state.range(0), rmm::cuda_stream_view{});
-    cudaDeviceSynchronize();
+    RMM_CUDA_TRY(cudaDeviceSynchronize());
   }
 
   state.SetItemsProcessed(static_cast<std::int64_t>(state.iterations()));
@@ -88,7 +88,7 @@ void BM_ThrustVectorSizeConstruction(benchmark::State& state)
 
   for (auto _ : state) {  // NOLINT(clang-analyzer-deadcode.DeadStores)
     rmm::device_vector<std::int32_t> vec(state.range(0));
-    cudaDeviceSynchronize();
+    RMM_CUDA_TRY(cudaDeviceSynchronize());
   }
 
   state.SetItemsProcessed(static_cast<std::int64_t>(state.iterations()));
