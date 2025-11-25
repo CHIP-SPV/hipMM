@@ -29,9 +29,6 @@ function(chipstar_configure_compiler)
     message(FATAL_ERROR "chipStar detected but HIP_PATH not set")
   endif()
 
-  # Set ROCm root to chipStar HIP path for CMake detection
-  set(CMAKE_HIP_COMPILER_ROCM_ROOT "$ENV{HIP_PATH}" CACHE PATH "ROCm root directory" FORCE)
-  
   # Use LLVM compiler if available from module
   if(DEFINED ENV{LLVM_ROOT} AND EXISTS "$ENV{LLVM_ROOT}/bin/clang++")
     set(CMAKE_HIP_COMPILER "$ENV{LLVM_ROOT}/bin/clang++" CACHE PATH "HIP compiler" FORCE)
