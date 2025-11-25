@@ -47,7 +47,7 @@ rapids_cmake_support_conda_env(conda_env)
 # This function takes in a test name and test source and handles setting all of the associated
 # properties and linking to build the test
 function(ConfigureTestInternal TEST_NAME)
-  set_source_files_properties(${ARGN} PROPERTIES LANGUAGE HIP)
+  set_source_files_properties(${ARGN} PROPERTIES LANGUAGE CXX)
   add_executable(${TEST_NAME} ${ARGN})
   target_include_directories(${TEST_NAME} PRIVATE "$<BUILD_INTERFACE:${RMM_SOURCE_DIR}>")
   target_link_libraries(

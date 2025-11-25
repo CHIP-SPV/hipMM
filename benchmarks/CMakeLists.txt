@@ -48,7 +48,7 @@ endif()
 # associated properties and linking to build the benchmark
 function(ConfigureBench BENCH_NAME)
   set_source_files_properties(${ARGN}
-                              "${CMAKE_CURRENT_SOURCE_DIR}/synchronization/synchronization.cpp" PROPERTIES LANGUAGE HIP)
+                              "${CMAKE_CURRENT_SOURCE_DIR}/synchronization/synchronization.cpp" PROPERTIES LANGUAGE CXX)
   add_executable(${BENCH_NAME} ${ARGN}
                                "${CMAKE_CURRENT_SOURCE_DIR}/synchronization/synchronization.cpp")
   target_include_directories(${BENCH_NAME} PRIVATE "$<BUILD_INTERFACE:${RMM_SOURCE_DIR}>")

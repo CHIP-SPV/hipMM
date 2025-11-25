@@ -75,7 +75,7 @@ project(
   # TODO(HIP/AMD): Use RAPIDS_VERSION in CI scripts
   # VERSION "${RAPIDS_VERSION}"
   VERSION 3.0.0
-  LANGUAGES C CXX HIP)
+  LANGUAGES C CXX)
 
 # Write the version header
 rapids_cmake_write_version_file(include/rmm/version_config.hpp)
@@ -228,7 +228,6 @@ if((BUILD_TESTS OR BUILD_BENCHMARKS) AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAM
     set(GPU_TARGETS "" CACHE STRING "GPU targets" FORCE)
     set(AMDGPU_TARGETS "" CACHE STRING "AMD GPU targets" FORCE)
   endif()
-  enable_language(HIP)
   
   # For chipStar HIP (SPIR-V), remove conflicting flags after enable_language
   # Note: We keep CMAKE_HIP_ARCHITECTURES set to "gfx908" to satisfy CMake's requirements
@@ -381,12 +380,4 @@ add_custom_target(
 # optionally assemble Thrust pretty-printers
 if(CCCL_SOURCE_DIR)
   configure_file(scripts/load-pretty-printers.in load-pretty-printers @ONLY)
-endif()
-
-# ##################################################################################################
-# * chipStar build file fixes ----------------------------------------------------------------------
-
-# Create fix target to remove conflicting flags from generated build files
-if(_CHIPSTAR_DETECTED)
-  chipstar_fix_build_flags()
 endif()
