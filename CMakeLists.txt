@@ -47,26 +47,36 @@ include(rapids-find)
 include(cmake/chipstar.cmake)
 chipstar_detect()
 
-#: NOTE(HIP/AMD, 04/22/25):
-#:     In contrast to the CUDA implementation, we need to initialize the HIP architectures
-#:     already before calling rapids_find_package(HIP...). Otherwise, GPU_TARGETS will be unset
-#:     on systems without GPUs and find_package(HIP) will warn that it
-#:     cannot autotect an architecture.
+# Exclude ROCm paths from find_package searches to prevent conflicts with chipStar
+# ROCm's hip-config-amd.cmake adds --offload-arch flags that are incompatible with chipStar
+if(_CHIPSTAR_DETECTED)
+  list(APPEND CMAKE_IGNORE_PATH
+    /opt/rocm
+    /opt/rocm/lib/cmake
+    /opt/rocm/hip
+    /opt/rocm/hip/lib/cmake
+  )
+  # Also exclude versioned ROCm installations
+  file(GLOB ROCM_VERSIONED_PATHS "/opt/rocm-*")
+  foreach(ROCM_PATH ${ROCM_VERSIONED_PATHS})
+    list(APPEND CMAKE_IGNORE_PATH
+      ${ROCM_PATH}
+      ${ROCM_PATH}/lib/cmake
+      ${ROCM_PATH}/hip
+      ${ROCM_PATH}/hip/lib/cmake
+    )
+  endforeach()
+  message(STATUS "chipStar: Excluding ROCm paths from find_package: ${CMAKE_IGNORE_PATH}")
+endif()
+
 # Configure chipStar compiler before rapids-hip initializes architectures
 if(_CHIPSTAR_DETECTED)
   chipstar_configure_compiler()
 endif()
 
 include(rapids-hip)
-# For chipStar, don't initialize architectures - they conflict with --offload=spirv64
-if(_CHIPSTAR_DETECTED)
-  # Set a dummy architecture that CMake will accept (needed for project() call)
-  # We'll remove --offload-arch flags from build files using the fix script
-  set(CMAKE_HIP_ARCHITECTURES "gfx908" CACHE STRING "HIP architectures" FORCE)
-  # Prevent rapids_hip_init_architectures from setting GPU_TARGETS
-  set(GPU_TARGETS "" CACHE STRING "GPU targets" FORCE)
-  set(AMDGPU_TARGETS "" CACHE STRING "AMD GPU targets" FORCE)
-else()
+# For chipStar, skip rapids_hip_init_architectures - chipStar uses SPIR-V not AMD GPUs
+if(NOT _CHIPSTAR_DETECTED)
   rapids_hip_init_architectures(RMM)
 endif()
 
@@ -226,35 +236,8 @@ endif()
 # * tests and benchmarks ---------------------------------------------------------------------------
 
 if((BUILD_TESTS OR BUILD_BENCHMARKS) AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-  #: NOTE(HIP/AMD, 04/22/25):
-  #:     In contrast to the CUDA implementation, we need to initialize the HIP architectures
-  #:     already before calling rapids_find_package(HIP...). Otherwise, GPU_TARGETS will be unset
-  #:     on systems without GPUs and find_package(HIP) will warn that it
-  #:     cannot autotect an architecture.
-  #: include(rapids-hip)
-  #: rapids_hip_init_architectures(RMM)
-  # For chipStar HIP (SPIR-V), we need to prevent CMake from adding --offload-arch flags
-  # CMake requires at least one architecture, but we'll use a hook to remove the flags
+  # For chipStar HIP (SPIR-V), configure HIP flags
   if(_CHIPSTAR_DETECTED)
-    # Set a dummy architecture that CMake will accept (gfx908 is a valid AMD arch)
-    # We'll remove the --offload-arch flags immediately after enable_language
-    set(CMAKE_HIP_ARCHITECTURES "gfx908" CACHE STRING "HIP architectures" FORCE)
-    set(GPU_TARGETS "" CACHE STRING "GPU targets" FORCE)
-    set(AMDGPU_TARGETS "" CACHE STRING "AMD GPU targets" FORCE)
-  endif()
-  
-  # For chipStar HIP (SPIR-V), remove conflicting flags after enable_language
-  # Note: We keep CMAKE_HIP_ARCHITECTURES set to "gfx908" to satisfy CMake's requirements
-  # but we'll remove --offload-arch flags from build files using the fix script
-  if(_CHIPSTAR_DETECTED)
-    # Remove --offload-arch flags from HIP compile options (they may have been added)
-    string(REGEX REPLACE "--offload-arch=[^ ]+ *" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
-    # Also remove specific known ones as backup
-    string(REPLACE "--offload-arch=gfx908" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
-    string(REPLACE "--offload-arch=gfx90a" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
-    string(REPLACE "--offload-arch=gfx942" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
-    # Remove conflicting ROCm include paths
-    string(REPLACE "-I/opt/rocm-5.7.0/include" "" CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}")
     # Add pre-include header to ensure __host__ and __device__ are defined for rocThrust
     if(DEFINED CHIPSTAR_PREINCLUDE_PATH AND EXISTS "${CHIPSTAR_PREINCLUDE_PATH}")
       set(CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS} -include ${CHIPSTAR_PREINCLUDE_PATH}")
@@ -290,7 +273,11 @@ if((BUILD_TESTS OR BUILD_BENCHMARKS) AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAM
   # Since RMM only enables HIP optionally we need to manually include the file that
   # rapids_cuda_init_architectures relies on `project` calling
   include("${CMAKE_PROJECT_RMM_INCLUDE}")
-  message(STATUS "RMM: Building benchmarks with GPU Architectures: ${CMAKE_HIP_ARCHITECTURES}")
+  if(_CHIPSTAR_DETECTED)
+    message(STATUS "RMM: Building with chipStar HIP (SPIR-V)")
+  else()
+    message(STATUS "RMM: Building benchmarks with GPU Architectures: ${CMAKE_HIP_ARCHITECTURES}")
+  endif()
 endif()
 
 # ##################################################################################################
