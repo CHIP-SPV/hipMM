@@ -502,13 +502,15 @@ TEST_F(ArenaTest, AllocateNinetyPercent)  // NOLINT
 TEST_F(ArenaTest, SmallMediumLarge)  // NOLINT
 {
   EXPECT_NO_THROW([]() {  // NOLINT(cppcoreguidelines-avoid-goto)
-    arena_mr mr(rmm::mr::get_current_device_resource_ref());
+    // chipStar: Cap arena size at 2GB to ensure total usage stays under 4GB limit
+    constexpr std::size_t max_arena_size{2_GiB};
+    auto const arena_size = std::min(rmm::percent_of_free_device_memory(90), max_arena_size);
+    arena_mr mr(rmm::mr::get_current_device_resource_ref(), arena_size);
     auto* small     = mr.allocate(256);
     auto* medium    = mr.allocate(64_MiB);
-    auto const free = rmm::available_device_memory().first;
-    // chipStar: Cap large allocation at 256MB to ensure total arena size stays under 4GB limit
+    // chipStar: Cap large allocation to fit within arena (leave room for small and medium)
     constexpr std::size_t max_alloc_size{256_MiB};
-    auto alloc_size = std::min(free / 3, max_alloc_size);
+    auto alloc_size = std::min(max_alloc_size, arena_size / 4);
     auto* large     = mr.allocate(alloc_size);
     mr.deallocate(small, 256);
     mr.deallocate(medium, 64_MiB);

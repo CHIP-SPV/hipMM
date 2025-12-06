@@ -188,6 +188,20 @@ add_library(rmm::rmm ALIAS rmm)
 target_include_directories(rmm INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
                                          "$<INSTALL_INTERFACE:include>")
 
+# chipStar: Ensure CUDA headers (cuspv/) are available
+if(_CHIPSTAR_DETECTED)
+  if(DEFINED HIP_DIR AND EXISTS "${HIP_DIR}/include")
+    target_include_directories(rmm INTERFACE "${HIP_DIR}/include")
+    message(STATUS "chipStar: Added CUDA headers include directory to rmm target: ${HIP_DIR}/include")
+  elseif(DEFINED HIP_INCLUDE_DIRS)
+    target_include_directories(rmm INTERFACE "${HIP_INCLUDE_DIRS}")
+    message(STATUS "chipStar: Added CUDA headers include directory to rmm target: ${HIP_INCLUDE_DIRS}")
+  elseif(DEFINED ENV{HIP_PATH} AND EXISTS "$ENV{HIP_PATH}/include")
+    target_include_directories(rmm INTERFACE "$ENV{HIP_PATH}/include")
+    message(STATUS "chipStar: Added CUDA headers include directory to rmm target: $ENV{HIP_PATH}/include")
+  endif()
+endif()
+
 if(CUDA_STATIC_RUNTIME)
   # message(STATUS "RMM: Enabling static linking of cudart")
   # target_link_libraries(rmm INTERFACE CUDA::cudart_static)

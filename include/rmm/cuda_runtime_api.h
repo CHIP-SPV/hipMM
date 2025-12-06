@@ -25,8 +25,20 @@
 // chipStar compatibility: include cuda_runtime.h first to get cuda* function definitions
 #ifdef __HIP_PLATFORM_SPIRV__
   #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wstatic-non-static-function"
+  #if defined(__GNUC__) && !defined(__clang__)
+    #pragma clang diagnostic ignored "-Wstatic-non-static-function"
+  #else
+    #pragma clang diagnostic ignored "-Wunknown-warning-option"
+  #endif
+  // Suppress #warning directives from chipStar headers
+  #pragma clang diagnostic ignored "-W#warnings"
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  #pragma clang diagnostic ignored "-Wmacro-redefined"
   #include <cuspv/cuda_runtime.h>
+  #pragma clang diagnostic pop
+  // Re-enable warnings for our code, but keep deprecation suppressed
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 #include <hip/hip_runtime_api.h>
@@ -402,6 +414,11 @@
 // chipStar compatibility: restore diagnostics at end of file
 #ifdef __HIP_PLATFORM_SPIRV__
   #pragma clang diagnostic pop
+  // Suppress deprecation warnings from chipStar headers
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  #pragma clang diagnostic ignored "-W#warnings"
+  #pragma clang diagnostic ignored "-Wmacro-redefined"
 #endif
 
 #ifndef cudaMemAdviseSetPreferredLocation

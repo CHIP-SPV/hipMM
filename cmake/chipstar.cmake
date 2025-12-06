@@ -33,6 +33,21 @@ function(chipstar_configure_compiler)
   if(DEFINED ENV{LLVM_ROOT} AND EXISTS "$ENV{LLVM_ROOT}/bin/clang++")
     set(CMAKE_HIP_COMPILER "$ENV{LLVM_ROOT}/bin/clang++" CACHE PATH "HIP compiler" FORCE)
     message(STATUS "chipStar: Using HIP compiler ${CMAKE_HIP_COMPILER}")
+    
+    # chipStar requires clang++ for both HIP and C++ compilation
+    # Set C++ compiler to clang++ as well since HIP flags may be applied to C++ files
+    if(NOT DEFINED CMAKE_CXX_COMPILER OR CMAKE_CXX_COMPILER MATCHES "g\\+\\+|c\\+\\+")
+      set(CMAKE_CXX_COMPILER "$ENV{LLVM_ROOT}/bin/clang++" CACHE PATH "C++ compiler" FORCE)
+      message(STATUS "chipStar: Setting C++ compiler to ${CMAKE_CXX_COMPILER} (required for chipStar)")
+    endif()
+    
+    # Also set C compiler to clang for consistency
+    if(NOT DEFINED CMAKE_C_COMPILER OR CMAKE_C_COMPILER MATCHES "gcc|cc")
+      if(EXISTS "$ENV{LLVM_ROOT}/bin/clang")
+        set(CMAKE_C_COMPILER "$ENV{LLVM_ROOT}/bin/clang" CACHE PATH "C compiler" FORCE)
+        message(STATUS "chipStar: Setting C compiler to ${CMAKE_C_COMPILER}")
+      endif()
+    endif()
   else()
     message(WARNING "chipStar: LLVM_ROOT not set, HIP compiler may not be configured correctly")
   endif()
@@ -49,6 +64,47 @@ function(chipstar_configure_dependencies)
     set(HIP_DIR "$ENV{HIP_DIR}" CACHE PATH "HIP directory" FORCE)
     set(ENV{HIP_DIR} "$ENV{HIP_DIR}")
     message(STATUS "chipStar: HIP_DIR=${HIP_DIR}")
+  elseif(DEFINED HIP_INCLUDE_DIRS)
+    # Use HIP_INCLUDE_DIRS if HIP_DIR is not set (HIP was found via find_package)
+    get_filename_component(HIP_ROOT "${HIP_INCLUDE_DIRS}" DIRECTORY)
+    set(HIP_DIR "${HIP_ROOT}" CACHE PATH "HIP directory" FORCE)
+    message(STATUS "chipStar: HIP_DIR=${HIP_DIR} (from HIP_INCLUDE_DIRS)")
+  elseif(DEFINED ENV{HIP_PATH})
+    set(HIP_DIR "$ENV{HIP_PATH}" CACHE PATH "HIP directory" FORCE)
+    message(STATUS "chipStar: HIP_DIR=${HIP_DIR} (from HIP_PATH)")
+  endif()
+  
+  # Ensure chipStar's CUDA headers (cuspv/) are found
+  # chipStar provides CUDA headers under cuspv/ namespace
+  # Exclude spdlog from chipStar's include to avoid conflicts with downloaded fmt
+  if(DEFINED HIP_DIR AND EXISTS "${HIP_DIR}/include")
+    # Create a wrapper directory that excludes spdlog
+    # We'll create symlinks to all subdirectories except spdlog
+    set(CHIPSTAR_CUDA_HEADER_DIR "${CMAKE_BINARY_DIR}/chipstar_cuda_headers")
+    file(MAKE_DIRECTORY "${CHIPSTAR_CUDA_HEADER_DIR}")
+    
+    # Get all subdirectories in chipStar's include
+    file(GLOB CHIPSTAR_INCLUDE_DIRS "${HIP_DIR}/include/*")
+    foreach(INCLUDE_DIR ${CHIPSTAR_INCLUDE_DIRS})
+      get_filename_component(DIR_NAME ${INCLUDE_DIR} NAME)
+      # Skip spdlog to avoid conflicts with downloaded fmt
+      if(NOT DIR_NAME STREQUAL "spdlog")
+        # Create symlink to preserve the directory structure
+        execute_process(
+          COMMAND ${CMAKE_COMMAND} -E create_symlink "${INCLUDE_DIR}" "${CHIPSTAR_CUDA_HEADER_DIR}/${DIR_NAME}"
+          RESULT_VARIABLE SYMLINK_RESULT
+        )
+      endif()
+    endforeach()
+    
+    include_directories(BEFORE "${CHIPSTAR_CUDA_HEADER_DIR}")
+    message(STATUS "chipStar: Added CUDA headers include directory (excluding spdlog): ${HIP_DIR}/include")
+  elseif(DEFINED HIP_INCLUDE_DIRS)
+    include_directories(BEFORE "${HIP_INCLUDE_DIRS}")
+    message(STATUS "chipStar: Added CUDA headers include directory: ${HIP_INCLUDE_DIRS}")
+  elseif(DEFINED ENV{HIP_PATH} AND EXISTS "$ENV{HIP_PATH}/include")
+    include_directories(BEFORE "$ENV{HIP_PATH}/include")
+    message(STATUS "chipStar: Added CUDA headers include directory from HIP_PATH: $ENV{HIP_PATH}/include")
   endif()
 
   # Set rocprim_DIR from module (if rocPRIM module is loaded)
