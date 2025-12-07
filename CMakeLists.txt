@@ -172,18 +172,6 @@ rapids_make_logger(rmm EXPORT_SET rmm-exports)
 # Configure chipStar dependencies before get_cccl.cmake
 if(_CHIPSTAR_DETECTED)
   chipstar_configure_dependencies()
-  # For chipStar: Ensure hipCUB's CUB headers are found before system CUB
-  # This must be done after chipstar_configure_dependencies() which sets up the include path
-  if(DEFINED ENV{HIPCUB_DIR} AND EXISTS "$ENV{HIPCUB_DIR}/include/hipcub/cub")
-    # Remove /usr/include from include path for CUB to force use of hipCUB
-    # We'll add it back as a system include so other system headers still work
-    get_directory_property(INCLUDE_DIRS INCLUDE_DIRECTORIES)
-    list(REMOVE_ITEM INCLUDE_DIRS "/usr/include")
-    set_directory_property(PROPERTY INCLUDE_DIRECTORIES ${INCLUDE_DIRS})
-    # Add /usr/include back as system include (lower priority)
-    include_directories(SYSTEM /usr/include)
-    message(STATUS "chipStar: Prioritized hipCUB CUB headers over system CUB")
-  endif()
 endif()
 
 include(cmake/thirdparty/get_cccl.cmake)
