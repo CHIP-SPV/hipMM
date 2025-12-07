@@ -226,19 +226,16 @@ endif()
 if((BUILD_TESTS OR BUILD_BENCHMARKS) AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # For chipStar HIP (SPIR-V), configure HIP flags
   if(_CHIPSTAR_DETECTED)
-    # Add flag to allow libhipcxx to work with unsupported architectures (chipStar/SPIR-V)
+    # Allow libhipcxx to work with unsupported architectures (chipStar/SPIR-V)
     add_compile_definitions(_LIBCUDACXX_ALLOW_UNSUPPORTED_ARCHITECTURE)
-    # chipStar compatibility: Define missing constants for CUB and libhipcxx
+    # chipStar compatibility: Define missing constants for libhipcxx pinned_memory_resource
     add_compile_definitions(
       hipHostAllocDefault=0x00
       hipHostAllocPortable=0x01
       hipHostAllocMapped=0x02
       hipHostAllocWriteCombined=0x04
-      NV_IS_HOST=1
     )
-    # chipStar compatibility: suppress static/non-static declaration conflicts
-    # These errors occur because chipStar's cuda_runtime.h has static inline functions
-    # that conflict with non-static declarations in hip_runtime_api.h
+    # Suppress static/non-static declaration conflicts from chipStar's cuda_runtime.h
     add_compile_options(-Wno-error)
   endif()
 
