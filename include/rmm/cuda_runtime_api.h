@@ -317,21 +317,7 @@
   #define cudaHostAlloc hipHostAlloc
 #endif
 #ifndef cudaHostAllocDefault
-  #ifdef __HIP_PLATFORM_SPIRV__
-    // chipStar: Define hipHostAlloc constants if not available
-    #ifndef hipHostAllocDefault
-      #define hipHostAllocDefault 0x00
-    #endif
-    #ifndef hipHostAllocPortable
-      #define hipHostAllocPortable 0x01
-    #endif
-    #ifndef hipHostAllocMapped
-      #define hipHostAllocMapped 0x02
-    #endif
-    #ifndef hipHostAllocWriteCombined
-      #define hipHostAllocWriteCombined 0x04
-    #endif
-  #endif
+  // hipHostAlloc constants defined at top of file for chipStar
   #define cudaHostAllocDefault hipHostAllocDefault
 #endif
 
