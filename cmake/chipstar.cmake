@@ -76,29 +76,9 @@ function(chipstar_configure_dependencies)
   
   # Ensure chipStar's CUDA headers (cuspv/) are found
   # chipStar provides CUDA headers under cuspv/ namespace
-  # Exclude spdlog from chipStar's include to avoid conflicts with downloaded fmt
   if(DEFINED HIP_DIR AND EXISTS "${HIP_DIR}/include")
-    # Create a wrapper directory that excludes spdlog
-    # We'll create symlinks to all subdirectories except spdlog
-    set(CHIPSTAR_CUDA_HEADER_DIR "${CMAKE_BINARY_DIR}/chipstar_cuda_headers")
-    file(MAKE_DIRECTORY "${CHIPSTAR_CUDA_HEADER_DIR}")
-    
-    # Get all subdirectories in chipStar's include
-    file(GLOB CHIPSTAR_INCLUDE_DIRS "${HIP_DIR}/include/*")
-    foreach(INCLUDE_DIR ${CHIPSTAR_INCLUDE_DIRS})
-      get_filename_component(DIR_NAME ${INCLUDE_DIR} NAME)
-      # Skip spdlog to avoid conflicts with downloaded fmt
-      if(NOT DIR_NAME STREQUAL "spdlog")
-        # Create symlink to preserve the directory structure
-        execute_process(
-          COMMAND ${CMAKE_COMMAND} -E create_symlink "${INCLUDE_DIR}" "${CHIPSTAR_CUDA_HEADER_DIR}/${DIR_NAME}"
-          RESULT_VARIABLE SYMLINK_RESULT
-        )
-      endif()
-    endforeach()
-    
-    include_directories(BEFORE "${CHIPSTAR_CUDA_HEADER_DIR}")
-    message(STATUS "chipStar: Added CUDA headers include directory (excluding spdlog): ${HIP_DIR}/include")
+    include_directories(BEFORE "${HIP_DIR}/include")
+    message(STATUS "chipStar: Added CUDA headers include directory: ${HIP_DIR}/include")
   elseif(DEFINED HIP_INCLUDE_DIRS)
     include_directories(BEFORE "${HIP_INCLUDE_DIRS}")
     message(STATUS "chipStar: Added CUDA headers include directory: ${HIP_INCLUDE_DIRS}")
@@ -128,16 +108,16 @@ function(chipstar_configure_dependencies)
     endif()
     
     # Note: hipCUB now has native __HIP_PLATFORM_SPIRV__ support - no patching needed
-
+    
     # chipStar: Force rocThrust to use HIP backend (rocPRIM) instead of CUDA backend (CUB)
-    # rocThrust checks THRUST_DEVICE_COMPILER == THRUST_DEVICE_COMPILER_HIP to select HIP backend
-    # which is set when __HIP__ is defined. Also explicitly set THRUST_DEVICE_SYSTEM to HIP.
-    add_compile_definitions(
-      __HIP__=1
-      THRUST_DEVICE_SYSTEM=5
-      THRUST_DEVICE_SYSTEM_HIP=5
-      THRUST_IGNORE_CUB_VERSION_CHECK=1
-    )
+  # rocThrust checks THRUST_DEVICE_COMPILER == THRUST_DEVICE_COMPILER_HIP to select HIP backend
+  # which is set when __HIP__ is defined. Also explicitly set THRUST_DEVICE_SYSTEM to HIP.
+  add_compile_definitions(
+    __HIP__=1
+    THRUST_DEVICE_SYSTEM=5
+    THRUST_DEVICE_SYSTEM_HIP=5
+    THRUST_IGNORE_CUB_VERSION_CHECK=1
+  )
   endif()
 endfunction()
 

@@ -238,11 +238,6 @@ endif()
 if((BUILD_TESTS OR BUILD_BENCHMARKS) AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # For chipStar HIP (SPIR-V), configure HIP flags
   if(_CHIPSTAR_DETECTED)
-    # Add pre-include header to ensure __host__ and __device__ are defined for rocThrust
-    if(DEFINED CHIPSTAR_PREINCLUDE_PATH AND EXISTS "${CHIPSTAR_PREINCLUDE_PATH}")
-      set(CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS} -include ${CHIPSTAR_PREINCLUDE_PATH}")
-    endif()
-    set(CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS}" CACHE STRING "HIP compiler flags" FORCE)
     # Add flag to allow libhipcxx to work with unsupported architectures (chipStar/SPIR-V)
     add_compile_definitions(_LIBCUDACXX_ALLOW_UNSUPPORTED_ARCHITECTURE)
     # chipStar compatibility: Define missing constants for CUB and libhipcxx
@@ -253,21 +248,10 @@ if((BUILD_TESTS OR BUILD_BENCHMARKS) AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAM
       hipHostAllocWriteCombined=0x04
       NV_IS_HOST=1
     )
-    # chipStar: Exclude system CUB directory from include search to force use of hipCUB
-    # rocThrust includes <cub/...> which incorrectly finds /usr/include/cub/
-    # We add hipCUB's cub directory with higher priority via include_directories(BEFORE)
-    # but the compiler may still find system CUB, so we need to work around this
-    if(DEFINED ENV{HIPCUB_DIR} AND EXISTS "$ENV{HIPCUB_DIR}/include/hipcub/cub")
-      # Create a wrapper that redirects cub/ includes to hipcub/cub/
-      # This is a workaround for rocThrust's direct CUB includes
-      message(STATUS "chipStar: Note - rocThrust may use system CUB instead of hipCUB")
-      message(STATUS "chipStar: This is expected behavior - rocThrust needs CUB compatibility fixes")
-    endif()
-             # chipStar compatibility: suppress static/non-static declaration conflicts
-             # These errors occur because chipStar's cuda_runtime.h has static inline functions
-             # that conflict with non-static declarations in hip_runtime_api.h
-             # Convert all errors to warnings (the pragma in cuda_runtime_api.h handles the specific warning)
-             add_compile_options(-Wno-error)
+    # chipStar compatibility: suppress static/non-static declaration conflicts
+    # These errors occur because chipStar's cuda_runtime.h has static inline functions
+    # that conflict with non-static declarations in hip_runtime_api.h
+    add_compile_options(-Wno-error)
   endif()
 
   # Since RMM only enables HIP optionally we need to manually include the file that
