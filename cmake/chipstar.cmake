@@ -11,11 +11,33 @@ set(_CHIPSTAR_DETECTED OFF CACHE INTERNAL "chipStar HIP detected")
 
 # Detect if chipStar HIP is being used
 function(chipstar_detect)
-  if(DEFINED ENV{HIP_PATH} AND "$ENV{HIP_PATH}" MATCHES "chipStar")
-    set(_CHIPSTAR_DETECTED ON CACHE INTERNAL "chipStar HIP detected" FORCE)
-    message(STATUS "chipStar HIP detected: $ENV{HIP_PATH}")
-    return()
+  # Detect by reading HIP_PLATFORM from hip-config.cmake file
+  # This avoids calling find_package(HIP) before project() which requires languages
+  # chipStar sets HIP_PLATFORM to "spirv"
+  # HIP_PATH is the standard environment variable used by HIP CMake packages
+  set(_HIP_CONFIG_PATHS)
+  if(DEFINED ENV{HIP_PATH})
+    list(APPEND _HIP_CONFIG_PATHS "$ENV{HIP_PATH}/lib/cmake/hip/hip-config.cmake")
+    list(APPEND _HIP_CONFIG_PATHS "$ENV{HIP_PATH}/hip-config.cmake")
   endif()
+  if(DEFINED ENV{HIP_DIR})
+    list(APPEND _HIP_CONFIG_PATHS "$ENV{HIP_DIR}/lib/cmake/hip/hip-config.cmake")
+    list(APPEND _HIP_CONFIG_PATHS "$ENV{HIP_DIR}/hip-config.cmake")
+  endif()
+
+  foreach(_CONFIG_PATH ${_HIP_CONFIG_PATHS})
+    if(EXISTS "${_CONFIG_PATH}")
+      file(READ "${_CONFIG_PATH}" _HIP_CONFIG_CONTENT)
+      # Check if HIP_PLATFORM is set to "spirv" in the config file
+      # Match patterns like: set(HIP_PLATFORM "spirv") or set(HIP_PLATFORM spirv)
+      if("${_HIP_CONFIG_CONTENT}" MATCHES "set\\(HIP_PLATFORM[^)]*spirv")
+        set(_CHIPSTAR_DETECTED ON CACHE INTERNAL "chipStar HIP detected" FORCE)
+        message(STATUS "chipStar HIP detected: HIP_PLATFORM=spirv (from ${_CONFIG_PATH})")
+        return()
+      endif()
+    endif()
+  endforeach()
+
   set(_CHIPSTAR_DETECTED OFF CACHE INTERNAL "chipStar HIP detected" FORCE)
 endfunction()
 
