@@ -57,6 +57,28 @@ function(find_and_configure_cccl)
   include(${rapids-cmake-dir}/cpm/cccl.cmake)
   rapids_cpm_cccl(BUILD_EXPORT_SET rmm-exports INSTALL_EXPORT_SET rmm-exports)
 
+  # Apply chipStar/SPIR-V patch to libhipcxx for chrono support
+  if(DEFINED libhipcxx_SOURCE_DIR)
+    set(_config_file "${libhipcxx_SOURCE_DIR}/include/cuda/std/detail/libcxx/include/__config")
+    if(EXISTS "${_config_file}")
+      file(READ "${_config_file}" _config_content)
+      if(NOT _config_content MATCHES "__HIP_PLATFORM_SPIRV__")
+        message(STATUS "Patching libhipcxx __config for chipStar/SPIR-V chrono support")
+        string(REPLACE
+          "#        define _LIBCUDACXX_HIP_TSC_NANOSECONDS_PER_CYCLE 10 // (1/_LIBCUDACXX_HIP_TSC_CLOCKRATE)
+//       The clock rate on other architectures"
+          "#        define _LIBCUDACXX_HIP_TSC_NANOSECONDS_PER_CYCLE 10 // (1/_LIBCUDACXX_HIP_TSC_CLOCKRATE)
+// chipStar/SPIR-V: Assume 100 MHz clock rate for timing APIs
+#      elif defined(__HIP_PLATFORM_SPIRV__) || defined(__SPIRV__)
+#        define _LIBCUDACXX_HIP_TSC_CLOCKRATE 100000000
+#        define _LIBCUDACXX_HIP_TSC_NANOSECONDS_PER_CYCLE 10
+//       The clock rate on other architectures"
+          _config_content "${_config_content}")
+        file(WRITE "${_config_file}" "${_config_content}")
+      endif()
+    endif()
+  endif()
+
 endfunction()
 
 find_and_configure_cccl()
