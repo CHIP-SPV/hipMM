@@ -1,0 +1,37 @@
+Hi Colleen,
+
+The issue is that RMM headers depend on CCCL (CUDA C++ Core Libraries) headers like `cuda/stream_ref` and `cuda/memory_resource`. These are header-only and need to be in the compiler's include path.
+
+When using CMake with `find_package(rmm)`, CCCL is provided automatically. But when compiling directly with `hipcc`, CCCL headers must be available.
+
+**Solution:**
+CCCL headers need to be installed with hipMM and added to the module's CPATH. 
+
+1. After installing hipMM, copy CCCL headers:
+   ```bash
+   cp -r $hipMM_build_dir/_deps/libhipcxx-src/include/cuda $hipMM_install_dir/include/
+   ```
+
+2. In the hipMM module file, add:
+   ```tcl
+   prepend-path CPATH $hipMM_install_dir/include
+   ```
+
+**What hipcc command should look like:**
+Once CCCL is in CPATH (via module), Russell's command should work as-is:
+```bash
+hipcc test.cpp
+```
+
+If CCCL isn't in CPATH yet, explicitly add it:
+```bash
+hipcc -I$hipMM_install_dir/include test.cpp
+```
+
+**Why tests didn't catch this:**
+Unit tests use CMake which automatically provides CCCL via the `CCCL::CCCL` target. Direct `hipcc` compilation doesn't have this automatic setup.
+
+The "cuda" in the name is expected - CCCL provides CUDA-compatible headers that work with chipStar's HIP implementation.
+
+Let me know if you need help setting up the installation or module configuration.
+

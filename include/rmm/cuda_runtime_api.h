@@ -22,6 +22,12 @@
 
 #pragma once
 
+// Enable experimental memory resource API from libhipcxx/CCCL
+// This is required for cuda::mr namespace types used by RMM
+#ifndef LIBCUDACXX_ENABLE_EXPERIMENTAL_MEMORY_RESOURCE
+#define LIBCUDACXX_ENABLE_EXPERIMENTAL_MEMORY_RESOURCE
+#endif
+
 // chipStar compatibility: include cuda_runtime.h first to get cuda* function definitions
 #ifdef __HIP_PLATFORM_SPIRV__
   #pragma clang diagnostic push
@@ -60,7 +66,11 @@
   #endif
 #endif
 
-#define CUDART_VERSION 0
+#ifndef CUDART_VERSION
+  #ifndef CUDART_VERSION
+  #define CUDART_VERSION 0
+#endif
+#endif
 
 // chipStar compatibility: Define missing CUDA error codes that rocThrust expects
 #ifdef __HIP_PLATFORM_SPIRV__

@@ -286,6 +286,18 @@ install(DIRECTORY include/rmm/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rmm)
 install(FILES ${RMM_BINARY_DIR}/include/rmm/version_config.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rmm)
 
+# Install CCCL (libhipcxx) headers for direct hipcc compilation
+# When using CMake find_package(rmm), CCCL is provided via CCCL::CCCL target.
+# But direct hipcc compilation needs these headers in CPATH.
+if(libhipcxx_SOURCE_DIR)
+  install(DIRECTORY ${libhipcxx_SOURCE_DIR}/include/cuda
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  install(DIRECTORY ${libhipcxx_SOURCE_DIR}/include/nv
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  install(DIRECTORY ${libhipcxx_SOURCE_DIR}/include/amd
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
+
 set(doc_string
     [=[
 Provide targets for RMM: RAPIDS Memory Manager.
