@@ -423,10 +423,6 @@ build_rocrand() {
     clone_or_update "git@github.com:CHIP-SPV/rocRAND.git" "rocRAND" "chipStar"
     
     cd rocRAND
-    
-    # Fix: Disable -fgpu-rdc for shared library compatibility with chipStar
-    sed -i 's/set_source_files_properties.*COMPILE_FLAGS -fgpu-rdc.*/# Disabled for chipStar: \0/' library/CMakeLists.txt
-    
     rm -rf build && mkdir build && cd build
     
     cmake .. \

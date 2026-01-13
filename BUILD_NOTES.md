@@ -16,7 +16,7 @@ export PATH=~/install-temp/chipStar/bin:$PATH
 6. H4I-HipBLAS (depends on chipStar, H4I-MKLShim)
 7. H4I-HipSOLVER (depends on chipStar, H4I-MKLShim)
 8. H4I-HipFFT (depends on chipStar, H4I-MKLShim)
-9. rocRAND (depends on chipStar) - static only
+9. rocRAND (depends on chipStar) - shared and static supported
 10. rocSPARSE (depends on chipStar, rocPRIM) - NEEDS FIX
 11. hipSPARSE (depends on chipStar, rocSPARSE)
 12. hipMM (depends on chipStar, rocPRIM, rocThrust, hipCUB)
@@ -173,21 +173,11 @@ ninja install
 
 ## 9. rocRAND
 **Branch:** chipStar  
-**Notes:** Disable ASM incbin. Disable `-fgpu-rdc` for shared library support.
-
-**Fix required for shared libraries:** Edit `library/CMakeLists.txt` line 67:
-```cmake
-# Comment out or remove this line:
-# set_source_files_properties(${SOURCE_FILE} PROPERTIES COMPILE_FLAGS -fgpu-rdc)
-```
+**Notes:** Disable ASM incbin. Shared and static libraries both supported.
 
 ```bash
 git clone git@github.com:CHIP-SPV/rocRAND.git
 cd rocRAND && git checkout chipStar
-
-# Apply fix: disable -fgpu-rdc for shared library compatibility
-sed -i 's/set_source_files_properties.*COMPILE_FLAGS -fgpu-rdc.*/# Disabled for chipStar shared lib: \0/' library/CMakeLists.txt
-
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -195,7 +185,7 @@ cmake .. \
   -DBUILD_TEST=OFF \
   -DBUILD_BENCHMARK=OFF \
   -DROCRAND_HAVE_ASM_INCBIN=OFF \
-  -DBUILD_SHARED_LIBS=ON
+  -DBUILD_SHARED_LIBS=ON   # or OFF for static
 ninja
 ninja install
 ```
