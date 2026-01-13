@@ -22,7 +22,7 @@ export PATH=~/install-temp/chipStar/bin:$PATH
 12. hipMM (depends on chipStar, rocPRIM, rocThrust, hipCUB)
 
 ### NOT BUILDABLE (not ported to SPIR-V):
-- hipRAND - no chipStar branch, amd_detail code not ported
+- hipRAND - not ported to SPIR-V, amd_detail code present
 
 ---
 
@@ -43,12 +43,12 @@ ninja install
 ---
 
 ## 2. rocPRIM
-**Branch:** chipStar  
+**Branch:** main  
 **Notes:** Header-only library.
 
 ```bash
 git clone git@github.com:CHIP-SPV/rocPRIM.git
-cd rocPRIM && git checkout chipStar
+cd rocPRIM && git checkout main
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -61,12 +61,12 @@ ninja install
 ---
 
 ## 3. hipCUB
-**Branch:** chipStar  
+**Branch:** main  
 **Notes:** Header-only. Needs rocPRIM.
 
 ```bash
 git clone git@github.com:CHIP-SPV/hipCUB.git
-cd hipCUB && git checkout chipStar
+cd hipCUB && git checkout main
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -80,12 +80,12 @@ ninja install
 ---
 
 ## 4. rocThrust
-**Branch:** chipStar  
+**Branch:** main  
 **Notes:** Header-only. Needs rocPRIM.
 
 ```bash
 git clone git@github.com:CHIP-SPV/rocThrust.git
-cd rocThrust && git checkout chipStar
+cd rocThrust && git checkout main
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -172,12 +172,12 @@ ninja install
 ---
 
 ## 9. rocRAND
-**Branch:** chipStar  
+**Branch:** main  
 **Notes:** Disable ASM incbin. Shared and static libraries both supported.
 
 ```bash
 git clone git@github.com:CHIP-SPV/rocRAND.git
-cd rocRAND && git checkout chipStar
+cd rocRAND && git checkout main
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -193,11 +193,11 @@ ninja install
 ---
 
 ## 10. rocSPARSE
-**Branch:** chipStar  
+**Branch:** main  
 
 ```bash
 git clone git@github.com:CHIP-SPV/rocSPARSE.git
-cd rocSPARSE && git checkout chipStar
+cd rocSPARSE && git checkout main
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -213,12 +213,12 @@ ninja install
 ---
 
 ## 10. hipSPARSE
-**Branch:** chipStar  
+**Branch:** main  
 **Notes:** Requires rocSPARSE.
 
 ```bash
 git clone git@github.com:CHIP-SPV/hipSPARSE.git
-cd hipSPARSE && git checkout chipStar
+cd hipSPARSE && git checkout main
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -233,12 +233,12 @@ ninja install
 ---
 
 ## 11. hipMM
-**Branch:** chipStar  
+**Branch:** main  
 **Notes:** Requires rocPRIM, rocThrust, hipCUB. Auto-patches libhipcxx for SPIRV.
 
 ```bash
 git clone git@github.com:CHIP-SPV/hipMM.git
-cd hipMM && git checkout chipStar
+cd hipMM && git checkout main
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -256,15 +256,15 @@ ninja install
 | Library | Status | Branch | Compiler |
 |---------|--------|--------|----------|
 | chipStar | OK | main | default |
-| rocPRIM | OK | chipStar | hipcc |
-| hipCUB | OK | chipStar | hipcc |
-| rocThrust | OK | chipStar | hipcc |
-| rocRAND | OK | chipStar | hipcc |
-| rocSPARSE | OK* | chipStar | hipcc |
-| hipSPARSE | OK | chipStar | hipcc |
+| rocPRIM | OK | main | hipcc |
+| hipCUB | OK | main | hipcc |
+| rocThrust | OK | main | hipcc |
+| rocRAND | OK | main | hipcc |
+| rocSPARSE | OK | main | hipcc |
+| hipSPARSE | OK | main | hipcc |
 | H4I-MKLShim | OK | develop | clang++ |
 | H4I-HipBLAS | OK | develop | CLANG_COMPILER_PATH |
 | H4I-HipSOLVER | OK | develop | CLANG_COMPILER_PATH |
 | H4I-HipFFT | OK | develop | hipcc |
-| hipMM | OK | chipStar | hipcc |
+| hipMM | OK | main | hipcc |
 | hipRAND | FAIL | - | - |
