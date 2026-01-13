@@ -100,7 +100,7 @@ ninja install
 ---
 
 ## 5. H4I-MKLShim
-**Branch:** develop  
+**Branch:** main  
 **Notes:** Requires Intel MKL (oneapi module). Uses clang++ NOT hipcc.
 
 ```bash
@@ -117,12 +117,12 @@ ninja install
 ---
 
 ## 6. H4I-HipBLAS
-**Branch:** develop  
+**Branch:** main  
 **Notes:** Requires H4I-MKLShim. Must use CLANG_COMPILER_PATH for the LLVM clang.
 
 ```bash
 git clone git@github.com:CHIP-SPV/H4I-HipBLAS.git
-cd H4I-HipBLAS && git checkout develop
+cd H4I-HipBLAS && git checkout main
 mkdir build && cd build
 cmake .. \
   -DCLANG_COMPILER_PATH=/path/to/llvm/bin/clang++ \
@@ -136,7 +136,7 @@ ninja install
 ---
 
 ## 7. H4I-HipSOLVER
-**Branch:** develop  
+**Branch:** main  
 **Notes:** Requires H4I-MKLShim. Must use CLANG_COMPILER_PATH for the LLVM clang.
 
 ```bash
@@ -154,7 +154,7 @@ ninja install
 ---
 
 ## 8. H4I-HipFFT
-**Branch:** develop  
+**Branch:** main  
 **Notes:** Requires H4I-MKLShim. Uses CMAKE_CXX_COMPILER=hipcc.
 
 ```bash
@@ -262,9 +262,9 @@ ninja install
 | rocRAND | OK | main | hipcc |
 | rocSPARSE | OK | main | hipcc |
 | hipSPARSE | OK | main | hipcc |
-| H4I-MKLShim | OK | develop | clang++ |
-| H4I-HipBLAS | OK | develop | CLANG_COMPILER_PATH |
-| H4I-HipSOLVER | OK | develop | CLANG_COMPILER_PATH |
-| H4I-HipFFT | OK | develop | hipcc |
+| H4I-MKLShim | OK | main | clang++ |
+| H4I-HipBLAS | OK | main | CLANG_COMPILER_PATH |
+| H4I-HipSOLVER | OK | main | CLANG_COMPILER_PATH |
+| H4I-HipFFT | OK | main | hipcc |
 | hipMM | OK | main | hipcc |
 | hipRAND | FAIL | - | - |
