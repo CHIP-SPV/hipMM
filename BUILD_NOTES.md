@@ -213,12 +213,12 @@ ninja install
 ---
 
 ## 10. hipSPARSE
-**Branch:** develop  
+**Branch:** chipStar  
 **Notes:** Requires rocSPARSE.
 
 ```bash
 git clone git@github.com:CHIP-SPV/hipSPARSE.git
-cd hipSPARSE
+cd hipSPARSE && git checkout chipStar
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -261,12 +261,10 @@ ninja install
 | rocThrust | OK | chipStar | hipcc |
 | rocRAND | OK | chipStar | hipcc |
 | rocSPARSE | OK* | chipStar | hipcc |
-| hipSPARSE | OK | develop | hipcc |
+| hipSPARSE | OK | chipStar | hipcc |
 | H4I-MKLShim | OK | develop | clang++ |
 | H4I-HipBLAS | OK | develop | CLANG_COMPILER_PATH |
 | H4I-HipSOLVER | OK | develop | CLANG_COMPILER_PATH |
 | H4I-HipFFT | OK | develop | hipcc |
 | hipMM | OK | chipStar | hipcc |
-| hipRAND | FAIL | develop | - |
-
-*rocSPARSE requires fix: add `#include <algorithm>` to utility.h
+| hipRAND | FAIL | - | - |
