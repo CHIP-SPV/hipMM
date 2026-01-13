@@ -17,7 +17,7 @@ export PATH=~/install-temp/chipStar/bin:$PATH
 7. H4I-HipSOLVER (depends on chipStar, H4I-MKLShim)
 8. H4I-HipFFT (depends on chipStar, H4I-MKLShim)
 9. rocRAND (depends on chipStar) - shared and static supported
-10. rocSPARSE (depends on chipStar, rocPRIM) - NEEDS FIX
+10. rocSPARSE (depends on chipStar, rocPRIM)
 11. hipSPARSE (depends on chipStar, rocSPARSE)
 12. hipMM (depends on chipStar, rocPRIM, rocThrust, hipCUB)
 
@@ -194,15 +194,10 @@ ninja install
 
 ## 10. rocSPARSE
 **Branch:** chipStar  
-**Notes:** Needs bug fix - add `#include <algorithm>` to `library/src/include/utility.h`
 
 ```bash
 git clone git@github.com:CHIP-SPV/rocSPARSE.git
 cd rocSPARSE && git checkout chipStar
-
-# FIX: Add missing include
-sed -i 's/#include "logging.h"/#include "logging.h"\n#include <algorithm>/' library/src/include/utility.h
-
 mkdir build && cd build
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
