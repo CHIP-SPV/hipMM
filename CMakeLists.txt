@@ -172,6 +172,12 @@ rapids_make_logger(rmm EXPORT_SET rmm-exports)
 # Configure chipStar dependencies before get_cccl.cmake
 if(_CHIPSTAR_DETECTED)
   chipstar_configure_dependencies()
+  # CUB/CUDA stub headers for chipStar builds — rocThrust's CUDA Thrust
+  # compatibility headers transitively include CUDA CUB headers that don't
+  # exist in the chipStar environment. These minimal stubs satisfy the
+  # includes; actual CUB functionality is provided by hipCUB at runtime.
+  set(CHIPSTAR_CUB_STUBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/stubs")
+  include_directories(SYSTEM "${CHIPSTAR_CUB_STUBS_DIR}")
 endif()
 
 include(cmake/thirdparty/get_cccl.cmake)
