@@ -130,8 +130,9 @@ function(chipstar_configure_dependencies)
     endif()
     
     # Note: hipCUB now has native __HIP_PLATFORM_SPIRV__ support - no patching needed
-    
-    # chipStar: Force rocThrust to use HIP backend (rocPRIM) instead of CUDA backend (CUB)
+  endif()
+
+  # chipStar: Force rocThrust to use HIP backend (rocPRIM) instead of CUDA backend (CUB)
   # rocThrust checks THRUST_DEVICE_COMPILER == THRUST_DEVICE_COMPILER_HIP to select HIP backend
   # which is set when __HIP__ is defined. Also explicitly set THRUST_DEVICE_SYSTEM to HIP.
   add_compile_definitions(
@@ -140,7 +141,6 @@ function(chipstar_configure_dependencies)
     THRUST_DEVICE_SYSTEM_HIP=5
     THRUST_IGNORE_CUB_VERSION_CHECK=1
   )
-  endif()
 endfunction()
 
 # Patch rapids-cmake generate_resource_spec.cmake to support chipStar (SPIR-V) platform
