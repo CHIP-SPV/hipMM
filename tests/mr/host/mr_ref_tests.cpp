@@ -51,6 +51,7 @@
 #include <cstddef>
 #include <deque>
 #include <random>
+#include <algorithm>
 
 namespace rmm::test {
 namespace {
